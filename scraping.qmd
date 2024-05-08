@@ -1,0 +1,190 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+```{r}
+#| include: FALSE
+
+library(tidyverse)
+library(stringr)
+library(dplyr)
+library(rvest)
+library(httr)
+library(spotifyr)
+```
+
+
+```{r}
+Sys.setenv(SPOTIFY_CLIENT_ID = '8ee4ffc433b4478895fc9f4a34228065')
+Sys.setenv(SPOTIFY_CLIENT_SECRET = '5a81b10ef1ea442fbae3e1c104271806')
+
+access_token <- get_spotify_access_token()
+
+```
+
+```{r}
+noah <- get_artist_audio_features('Noah Kahan')
+noah
+```
+
+```{r}
+noahalbums <- get_artist_albums('2RQXRUsr4IW1f3mKyKsy4B')
+noahalbums
+```
+
+```{r}
+indie <- get_genre_artists("indie", limit = 50)
+indie
+
+country <- get_genre_artists("country", limit = 50)
+country
+
+rock <- get_genre_artists("rock", limit = 50)
+rock
+
+pop <- get_genre_artists("pop", limit = 50)
+pop
+
+rap <- get_genre_artists("rap", limit = 50)
+rap
+```
+
+```{r}
+genres <- indie |>
+  full_join(country)
+```
+
+```{r}
+search_popular_artists <- function() {
+  # Use Spotify API to search for popular artists or retrieve charts
+  # Return a list of popular artists
+}
+
+# Function to get artist information
+get_artist_info <- function(artist_id) {
+  # Use Spotify API to get artist information including genres
+  # Return the artist's information
+}
+
+# Function to aggregate popularity of genres
+aggregate_genre_popularity <- function(artists) {
+  # Initialize an empty dictionary to store genre popularity
+  genre_popularity <- list()
+  
+  # Iterate through each artist
+  for (artist in artists) {
+    artist_info <- get_artist_info(artist$id)
+    genres <- artist_info$genres
+    
+    # For each genre, update its popularity
+    for (genre in genres) {
+      if (genre %in% names(genre_popularity)) {
+        genre_popularity[[genre]] <- genre_popularity[[genre]] + artist_info$popularity
+      } else {
+        genre_popularity[[genre]] <- artist_info$popularity
+      }
+    }
+  }
+  
+  return(genre_popularity)
+}
+
+# Main code
+popular_artists <- search_popular_artists()
+genre_popularity <- aggregate_genre_popularity(popular_artists)
+
+# Sort genres by popularity
+sorted_genres <- (genre_popularity, decreasing = TRUE)
+
+# Print the top genres and their popularity
+head(genre_popularity, 10)
+```
+
+```{r}
+library(httr)
+library(jsonlite)
+
+# Function to authenticate with Spotify and get access token
+get_access_token <- function(client_id, client_secret) {
+  # Spotify API endpoint for getting access token
+  endpoint <- "https://accounts.spotify.com/api/token"
+  
+  # Encode client ID and client secret
+  auth <- base64_enc(paste0(client_id, ":", client_secret))
+  
+  # Request body
+  body <- list(
+    grant_type = "client_credentials"
+  )
+  
+  # Authorization header with client ID and client secret
+  headers <- add_headers(
+    "Authorization" = paste("Basic", auth)
+  )
+  
+  # Make POST request to get access token
+  response <- POST(endpoint, body = body, encode = "json", headers = headers)
+  
+  # Extract access token from response
+  token <- content(response)$access_token
+  
+  return(token)
+}
+
+# Function to get the 50 artists with the most monthly listeners
+get_top_artists <- function(access_token) {
+  # Spotify API endpoint for getting artists
+  endpoint <- "https://api.spotify.com/v1/artists"
+  
+  # Query parameters
+  params <- list(
+    limit = 50,  # Number of artists to retrieve
+    market = "US"  # Specify the market (country) for which you want to retrieve data
+  )
+  
+  # Authorization header with access token
+  headers <- add_headers(
+    "Authorization" = paste("Bearer", access_token)
+  )
+  
+  # Make GET request to Spotify API
+  response <- GET(endpoint, query = params, headers = headers)
+  
+  # Check if request was successful
+  if (status_code(response) == 200) {
+    # Parse JSON response
+    data <- content(response, "text")
+    artists <- fromJSON(data)
+    
+    return(artists)
+  } else {
+    # Print error message
+    print(paste0("Error: ", status_code(response)))
+    return(NULL)
+  }
+}
+
+# Your Spotify API credentials
+client_id <- "YOUR_CLIENT_ID"
+client_secret <- "YOUR_CLIENT_SECRET"
+
+# Authenticate with Spotify and get access token
+access_token <- get_access_token(client_id, client_secret)
+
+# Get the 50 artists with the most monthly listeners
+top_artists <- get_top_artists(access_token)
+
+# Print the names of the top artists
+for (i in 1:length(top_artists$artists)) {
+  print(top_artists$artists[[i]]$name)
+}
+```
+
+#get top more popular 10 genres on spotify
+
+#get top 5 artists of each genre by listens? or likes?
+
+#get top x# of songs or albums for each artist?
+
+#look at trends such as tempo, song length, ????
