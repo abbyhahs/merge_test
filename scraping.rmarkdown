@@ -41,34 +41,34 @@ noahalbums
 ```{r}
 #top 50 artists of each genre by number of followers
 indie <- get_genre_artists("indie", limit = 50)
-indie
+
 
 country <- get_genre_artists("country", limit = 50)
-country
+
 
 rock <- get_genre_artists("rock", limit = 50)
-rock
+
 
 pop <- get_genre_artists("pop", limit = 50)
-pop
+
 
 rap <- get_genre_artists("rap", limit = 50)
-rap
+
 
 edm <- get_genre_artists("edm", limit = 50)
-edm
+
 
 latin <- get_genre_artists("latin", limit = 50)
-latin
+
 
 christian <- get_genre_artists("christian", limit = 50)
-christian
+
 
 hip_hop <- get_genre_artists("hip-hop", limit = 50)
-hip_hop
+
 
 r_b <- get_genre_artists("R&B", limit = 50)
-r_b
+
 ```
 
 ```{r}
@@ -103,12 +103,13 @@ for (artist_id in artists$id) {
   audio_features <- bind_rows(audio_features, artist_audio_features)
 }
 
+#gives me a different number of artists every time.. should be 58
 
 print(audio_features)
 ```
 
 ```{r}
-#somehow go 41/58 artists.... why?
+
 audio_features |>
   count(artist_name)
 ```
