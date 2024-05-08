@@ -4,3 +4,47 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r}
+library(tidyverse)
+library(stringr)
+library(dplyr)
+library(rvest)
+library(httr)
+library(spotifyr)
+library(ggplot2)
+```
+
+
+```{r}
+genres |>
+  ggplot(aes(x = genre, y = followers.total)) +
+  geom_boxplot()
+
+genres |>
+  ggplot(aes(x = genre, y = popularity)) +
+  geom_boxplot()
+```
+
+```{r}
+artists_songs |>
+  ggplot(aes(x = album_release_date, y = tempo, color = genre)) +
+  geom_point() + 
+  facet_wrap(~genre)
+
+artists_songs |>
+  ggplot(aes(x = popularity, y = energy, color = genre)) +
+  geom_point()
+
+artists_songs |>
+  ggplot(aes(x = duration_ms, y = popularity, color = genre)) +
+  geom_point()
+
+artists_songs |>
+  ggplot(aes(x = popularity, color = genre, fill = genre)) +
+  geom_bar()
+
+artists_songs |>
+  ggplot(aes(x = danceability, color = genre)) +
+  geom_density()
+```
+

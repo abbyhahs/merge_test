@@ -1,0 +1,127 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| include: FALSE
+
+library(tidyverse)
+library(stringr)
+library(purrr)
+library(dplyr)
+library(rvest)
+library(httr)
+library(spotifyr)
+```
+
+```{r}
+Sys.setenv(SPOTIFY_CLIENT_ID = '8ee4ffc433b4478895fc9f4a34228065')
+Sys.setenv(SPOTIFY_CLIENT_SECRET = '5a81b10ef1ea442fbae3e1c104271806')
+
+access_token <- get_spotify_access_token()
+
+```
+
+```{r}
+noah <- get_artist_audio_features('Noah Kahan')
+noah
+```
+
+```{r}
+noahalbums <- get_artist('2RQXRUsr4IW1f3mKyKsy4B')
+noahalbums
+```
+
+
+
+#get top most popular 10 genres on spotify
+
+```{r}
+#top 50 artists of each genre by number of followers
+indie <- get_genre_artists("indie", limit = 50)
+indie
+
+country <- get_genre_artists("country", limit = 50)
+country
+
+rock <- get_genre_artists("rock", limit = 50)
+rock
+
+pop <- get_genre_artists("pop", limit = 50)
+pop
+
+rap <- get_genre_artists("rap", limit = 50)
+rap
+
+edm <- get_genre_artists("edm", limit = 50)
+edm
+
+latin <- get_genre_artists("latin", limit = 50)
+latin
+
+christian <- get_genre_artists("christian", limit = 50)
+christian
+
+hip_hop <- get_genre_artists("hip-hop", limit = 50)
+hip_hop
+
+r_b <- get_genre_artists("R&B", limit = 50)
+r_b
+```
+
+```{r}
+#dataset with 394 rows all the genres, each artist shows up once (some were in multiple genres)
+genres <- indie |>
+  full_join(country) |>
+  full_join(rock) |>
+  full_join(pop) |>
+  full_join(rap) |>
+  full_join(edm) |>
+  full_join(latin) |>
+  full_join(christian) |>
+  full_join(hip_hop) |>
+  full_join(r_b) |>
+  distinct(name, .keep_all = TRUE)
+genres
+```
+
+```{r}
+#top 5 artists for each genres based on popularity, there were some ties
+#want to join artist song data to artists by id
+artists <- genres |>
+  group_by(genre) |>
+  slice_max(popularity, n = 5) |>
+  select(href, id, name, popularity, uri, followers.total, genre) 
+
+audio_features <- data.frame()
+
+# go through each artist ID and get audio features
+for (artist_id in artists$id) {
+  artist_audio_features <- get_artist_audio_features(artist_id)
+  audio_features <- bind_rows(audio_features, artist_audio_features)
+}
+
+
+print(audio_features)
+```
+
+```{r}
+#somehow go 41/58 artists.... why?
+audio_features |>
+  count(artist_name)
+```
+
+```{r}
+artists_songs <- left_join(artists, audio_features, by = c("id" = "artist_id"))
+```
+
+
+
+#get top 5 artists of each genre by listens? or likes?
+
+#get top x# of songs or albums for each artist?
+
+#look at trends such as tempo, song length, ????
+

@@ -8,6 +8,7 @@ editor_options:
 
 library(tidyverse)
 library(stringr)
+library(purrr)
 library(dplyr)
 library(rvest)
 library(httr)
@@ -29,11 +30,14 @@ noah
 ```
 
 ```{r}
-noahalbums <- get_artist_albums('2RQXRUsr4IW1f3mKyKsy4B')
+noahalbums <- get_artist('2RQXRUsr4IW1f3mKyKsy4B')
 noahalbums
 ```
 
+
+#get top most popular 10 genres on spotify
 ```{r}
+#top 50 artists of each genre by number of followers
 indie <- get_genre_artists("indie", limit = 50)
 indie
 
@@ -48,140 +52,69 @@ pop
 
 rap <- get_genre_artists("rap", limit = 50)
 rap
+
+edm <- get_genre_artists("edm", limit = 50)
+edm
+
+latin <- get_genre_artists("latin", limit = 50)
+latin
+
+christian <- get_genre_artists("christian", limit = 50)
+christian
+
+hip_hop <- get_genre_artists("hip-hop", limit = 50)
+hip_hop
+
+r_b <- get_genre_artists("R&B", limit = 50)
+r_b
 ```
 
 ```{r}
+#dataset with 394 rows all the genres, each artist shows up once (some were in multiple genres)
 genres <- indie |>
-  full_join(country)
+  full_join(country) |>
+  full_join(rock) |>
+  full_join(pop) |>
+  full_join(rap) |>
+  full_join(edm) |>
+  full_join(latin) |>
+  full_join(christian) |>
+  full_join(hip_hop) |>
+  full_join(r_b) |>
+  distinct(name, .keep_all = TRUE)
+genres
 ```
 
 ```{r}
-search_popular_artists <- function() {
-  # Use Spotify API to search for popular artists or retrieve charts
-  # Return a list of popular artists
+#top 5 artists for each genres based on popularity, there were some ties
+#want to join artist song data to artists by id
+artists <- genres |>
+  group_by(genre) |>
+  slice_max(popularity, n = 5) |>
+  select(href, id, name, popularity, uri, followers.total, genre) 
+
+audio_features <- data.frame()
+
+# go through each artist ID and get audio features
+for (artist_id in artists$id) {
+  artist_audio_features <- get_artist_audio_features(artist_id)
+  audio_features <- bind_rows(audio_features, artist_audio_features)
 }
 
-# Function to get artist information
-get_artist_info <- function(artist_id) {
-  # Use Spotify API to get artist information including genres
-  # Return the artist's information
-}
 
-# Function to aggregate popularity of genres
-aggregate_genre_popularity <- function(artists) {
-  # Initialize an empty dictionary to store genre popularity
-  genre_popularity <- list()
-  
-  # Iterate through each artist
-  for (artist in artists) {
-    artist_info <- get_artist_info(artist$id)
-    genres <- artist_info$genres
-    
-    # For each genre, update its popularity
-    for (genre in genres) {
-      if (genre %in% names(genre_popularity)) {
-        genre_popularity[[genre]] <- genre_popularity[[genre]] + artist_info$popularity
-      } else {
-        genre_popularity[[genre]] <- artist_info$popularity
-      }
-    }
-  }
-  
-  return(genre_popularity)
-}
-
-# Main code
-popular_artists <- search_popular_artists()
-genre_popularity <- aggregate_genre_popularity(popular_artists)
-
-# Sort genres by popularity
-sorted_genres <- (genre_popularity, decreasing = TRUE)
-
-# Print the top genres and their popularity
-head(genre_popularity, 10)
+print(audio_features)
 ```
 
 ```{r}
-library(httr)
-library(jsonlite)
-
-# Function to authenticate with Spotify and get access token
-get_access_token <- function(client_id, client_secret) {
-  # Spotify API endpoint for getting access token
-  endpoint <- "https://accounts.spotify.com/api/token"
-  
-  # Encode client ID and client secret
-  auth <- base64_enc(paste0(client_id, ":", client_secret))
-  
-  # Request body
-  body <- list(
-    grant_type = "client_credentials"
-  )
-  
-  # Authorization header with client ID and client secret
-  headers <- add_headers(
-    "Authorization" = paste("Basic", auth)
-  )
-  
-  # Make POST request to get access token
-  response <- POST(endpoint, body = body, encode = "json", headers = headers)
-  
-  # Extract access token from response
-  token <- content(response)$access_token
-  
-  return(token)
-}
-
-# Function to get the 50 artists with the most monthly listeners
-get_top_artists <- function(access_token) {
-  # Spotify API endpoint for getting artists
-  endpoint <- "https://api.spotify.com/v1/artists"
-  
-  # Query parameters
-  params <- list(
-    limit = 50,  # Number of artists to retrieve
-    market = "US"  # Specify the market (country) for which you want to retrieve data
-  )
-  
-  # Authorization header with access token
-  headers <- add_headers(
-    "Authorization" = paste("Bearer", access_token)
-  )
-  
-  # Make GET request to Spotify API
-  response <- GET(endpoint, query = params, headers = headers)
-  
-  # Check if request was successful
-  if (status_code(response) == 200) {
-    # Parse JSON response
-    data <- content(response, "text")
-    artists <- fromJSON(data)
-    
-    return(artists)
-  } else {
-    # Print error message
-    print(paste0("Error: ", status_code(response)))
-    return(NULL)
-  }
-}
-
-# Your Spotify API credentials
-client_id <- "YOUR_CLIENT_ID"
-client_secret <- "YOUR_CLIENT_SECRET"
-
-# Authenticate with Spotify and get access token
-access_token <- get_access_token(client_id, client_secret)
-
-# Get the 50 artists with the most monthly listeners
-top_artists <- get_top_artists(access_token)
-
-# Print the names of the top artists
-for (i in 1:length(top_artists$artists)) {
-  print(top_artists$artists[[i]]$name)
-}
+#somehow go 41/58 artists.... why?
+audio_features |>
+  count(artist_name)
 ```
 
-#get top more popular 10 genres on spotify
+```{r}
+artists_songs <- left_join(artists, audio_features, by = c("id" = "artist_id"))
+```
+
 
 #get top 5 artists of each genre by listens? or likes?
 
