@@ -65,6 +65,8 @@ genres <- indie |>
   full_join(r_b) |>
   distinct(name, .keep_all = TRUE)
 genres
+
+write_rds(genres, "genres.csv")
 ```
 
 ```{r}
@@ -74,6 +76,7 @@ artists <- genres |>
   group_by(genre) |>
   slice_max(popularity, n = 3) |>
   select(href, id, name, popularity, uri, followers.total, genre) 
+write_rds(artists, "artists.csv")
 
 audio_features <- data.frame()
 
@@ -105,7 +108,5 @@ songs <- artist_songs |>
 write_rds(songs, "songs.csv")
 ```
 
-```{r}
-read_rds("songs.csv")
-```
+
 

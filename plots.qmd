@@ -17,29 +17,8 @@ library(ggplot2)
 
 ```{r}
 songs = read_rds("songs.csv")
-
-indie <- get_genre_artists("indie", limit = 50)
-country <- get_genre_artists("country", limit = 50)
-rock <- get_genre_artists("rock", limit = 50)
-pop <- get_genre_artists("pop", limit = 50)
-rap <- get_genre_artists("rap", limit = 50)
-edm <- get_genre_artists("edm", limit = 50)
-latin <- get_genre_artists("latin", limit = 50)
-christian <- get_genre_artists("christian", limit = 50)
-hip_hop <- get_genre_artists("hip-hop", limit = 50)
-r_b <- get_genre_artists("R&B", limit = 50)
-
-genres <- indie |>
-  full_join(country) |>
-  full_join(rock) |>
-  full_join(pop) |>
-  full_join(rap) |>
-  full_join(edm) |>
-  full_join(latin) |>
-  full_join(christian) |>
-  full_join(hip_hop) |>
-  full_join(r_b) |>
-  distinct(name, .keep_all = TRUE)
+genres = read_rds("genres.csv")
+artists = read_rds("artists.csv")
 ```
 
 ```{r}
