@@ -25,7 +25,7 @@ access_token <- get_spotify_access_token()
 ```
 
 ```{r}
-noah <- get_artist_audio_features('Noah Kahan')
+noah <- get_artist_audio_features('2RQXRUsr4IW1f3mKyKsy4B')
 noah
 ```
 
@@ -39,32 +39,14 @@ noahalbums
 ```{r}
 #top 50 artists of each genre by number of followers
 indie <- get_genre_artists("indie", limit = 50)
-
-
 country <- get_genre_artists("country", limit = 50)
-
-
 rock <- get_genre_artists("rock", limit = 50)
-
-
 pop <- get_genre_artists("pop", limit = 50)
-
-
 rap <- get_genre_artists("rap", limit = 50)
-
-
 edm <- get_genre_artists("edm", limit = 50)
-
-
 latin <- get_genre_artists("latin", limit = 50)
-
-
 christian <- get_genre_artists("christian", limit = 50)
-
-
 hip_hop <- get_genre_artists("hip-hop", limit = 50)
-
-
 r_b <- get_genre_artists("R&B", limit = 50)
 
 ```
@@ -86,14 +68,16 @@ genres
 ```
 
 ```{r}
-#top 5 artists for each genres based on popularity, there were some ties
+#top 3 artists for each genres based on popularity, there were some ties
 #want to join artist song data to artists by id
 artists <- genres |>
   group_by(genre) |>
-  slice_max(popularity, n = 5) |>
+  slice_max(popularity, n = 3) |>
   select(href, id, name, popularity, uri, followers.total, genre) 
 
 audio_features <- data.frame()
+
+temp <- c("3fMbdgg4jU18AjLCKBhRSm", "7FNnA9vBm6EKceENgCGRMb", "20wkVLutqVOYrc0kxFs7rA")
 
 # go through each artist ID and get audio features
 for (artist_id in artists$id) {
@@ -101,24 +85,27 @@ for (artist_id in artists$id) {
   audio_features <- bind_rows(audio_features, artist_audio_features)
 }
 
-#gives me a different number of artists every time.. should be 58
 
 print(audio_features)
 ```
 
 ```{r}
-
 audio_features |>
   count(artist_name)
 ```
 
 ```{r}
-artists_songs <- left_join(artists, audio_features, by = c("id" = "artist_id"))
+artist_songs <- left_join(artists, audio_features, by = c("id" = "artist_id"))
+
+#remove songs that appear multiple times, remove unnecessary columns
+songs <- artist_songs |>
+  distinct(track_name, .keep_all = TRUE) |>
+  select(!c(href, album_type, album_images,    album_release_date_precision, analysis_url, track_href, track_preview_url, type, external_urls.spotify))
+
+write_rds(songs, "songs.csv")
 ```
 
+```{r}
+read_rds("songs.csv")
+```
 
-#get top 5 artists of each genre by listens? or likes?
-
-#get top x# of songs or albums for each artist?
-
-#look at trends such as tempo, song length, ????
