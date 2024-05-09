@@ -1,0 +1,59 @@
+---
+title: "Shiny"
+runtime: shiny
+output: html_document
+---
+
+
+
+```{r global, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+```{r, echo = FALSE}
+songs = read_rds("songs.csv")
+genres = read_rds("genres.csv")
+artists = read_rds("artists.csv")
+```
+
+```{r, echo=FALSE}
+inputPanel(
+  selectInput("x", label = "x-axis variable:",
+    choices = c("Danceability" = "danceability",
+                "Energy" = "energy",
+                "Loudness" = "loudness",
+                "Speechiness" = "speechiness", 
+                "Acousticness" = "acousticness", 
+                "Instrumentalness" = "instrumentalness",
+                "Liveness" = "liveness",
+                "Valence" = "valence",
+                "Tempo" = "tempo")),
+ selectInput("y", label = "y-axis variable:",
+    choices = c("Danceability" = "danceability",
+                "Energy" = "energy",
+                "Loudness" = "loudness",
+                "Speechiness" = "speechiness", 
+                "Acousticness" = "acousticness", 
+                "Instrumentalness" = "instrumentalness",
+                "Liveness" = "liveness",
+                "Valence" = "valence",
+                "Tempo" = "tempo"))
+ #selectInput("genre", label = "Genre:", 
+             #choices = c("R&B" = "R&B",
+                         #"Christian" = "christian",
+                         #"Country" = "country",
+                         #"EDM" = "edm",
+                         #"Hip-Hop" = "hip-hop",
+                         #"Indie" = "indie",
+                         #"Latin" = "latin",
+                         #"Pop" = "pop",
+                         #"Rap" = "rap",
+                         #"Rock" = "rock"))
+)
+
+renderPlot({
+  ggplot(songs, aes(y = .data[[input$y]], x = .data[[input$x]])) + 
+    geom_point()
+})
+```
