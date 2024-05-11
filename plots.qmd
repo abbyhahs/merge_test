@@ -71,13 +71,18 @@ songs |>
   filter(genre == "country") |>
   group_by(album_name) |>
   mutate(num_songsalbum = n()) |>
-  ggplot(aes(x = album_release_year, y = num_songsalbum, color = genre)) +
+  ggplot(aes(x = album_release_year, y = num_songsalbum, color = name)) +
   geom_point() +
   geom_smooth(se = F)
 
 songs |>
   filter(genre == "hip-hop") |>
   ggplot(aes(x = album_release_year, y = duration_ms)) +
+  geom_point() + 
+  geom_smooth(se = F)
+
+songs |>
+  ggplot(aes(x = tempo, y = danceability, color = genre)) +
   geom_point()
 ```
 

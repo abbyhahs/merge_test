@@ -38,22 +38,55 @@ inputPanel(
                 "Instrumentalness" = "instrumentalness",
                 "Liveness" = "liveness",
                 "Valence" = "valence",
-                "Tempo" = "tempo"))
- #selectInput("genre", label = "Genre:", 
-             #choices = c("R&B" = "R&B",
-                         #"Christian" = "christian",
-                         #"Country" = "country",
-                         #"EDM" = "edm",
-                         #"Hip-Hop" = "hip-hop",
-                         #"Indie" = "indie",
-                         #"Latin" = "latin",
-                         #"Pop" = "pop",
-                         #"Rap" = "rap",
-                         #"Rock" = "rock"))
+                "Tempo" = "tempo")),
+ selectInput("genre", label = "Genre:", 
+             choices = c("R&B" = "R&B",
+                         "Christian" = "christian",
+                         "Country" = "country",
+                         "EDM" = "edm",
+                         "Hip-Hop" = "hip-hop",
+                         "Indie" = "indie",
+                         "Latin" = "latin",
+                         "Pop" = "pop",
+                         "Rap" = "rap",
+                         "Rock" = "rock"))
 )
 
 renderPlot({
-  ggplot(songs, aes(y = .data[[input$y]], x = .data[[input$x]])) + 
-    geom_point()
+  filtered_songs <- songs %>%
+    filter(genre == input$genre)
+  
+  ggplot(filtered_songs, aes(y = .data[[input$y]], x = .data[[input$x]])) + 
+    geom_point() + geom_smooth(method = "lm", se = F)
 })
 ```
+
+
+```{r, echo=FALSE}
+inputPanel(
+ selectInput("genre", label = "Genre:", 
+             choices = c("R&B" = "R&B",
+                         "Christian" = "christian",
+                         "Country" = "country",
+                         "EDM" = "edm",
+                         "Hip-Hop" = "hip-hop",
+                         "Indie" = "indie",
+                         "Latin" = "latin",
+                         "Pop" = "pop",
+                         "Rap" = "rap",
+                         "Rock" = "rock"))
+)
+
+renderPlot({
+  filtered_songs2 <- songs |>
+    filter(genre == input$genre) |>
+    group_by(album_name) |>
+  mutate(num_songsalbum = n())
+  
+  ggplot(filtered_songs2, aes(y = num_songsalbum, x = album_release_year, color = name)) + 
+    geom_point() + geom_smooth(se = FALSE)
+})
+```
+
+
+
