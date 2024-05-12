@@ -74,17 +74,19 @@ inputPanel(
                          "Latin" = "latin",
                          "Pop" = "pop",
                          "Rap" = "rap",
-                         "Rock" = "rock"))
+                         "Rock" = "rock")), 
+ selectInput("albums", label = "Album Qualities:", 
+             choices = c("Number of Songs/Album" = "num_songsalbum",
+                         "Duration (ms)" = "duration_ms"))
 )
 
 renderPlot({
-  filtered_songs2 <- songs |>
+  songs |>
     filter(genre == input$genre) |>
     group_by(album_name) |>
-  mutate(num_songsalbum = n())
-  
-  ggplot(filtered_songs2, aes(y = num_songsalbum, x = album_release_year, color = name)) + 
-    geom_point() + geom_smooth(se = FALSE)
+  mutate(num_songsalbum = n()) |>
+  ggplot(aes(y = .data[[input$albums]], x = album_release_year, color = name)) + 
+    geom_point() + geom_smooth(method = "lm", se = FALSE)
 })
 ```
 
