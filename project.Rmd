@@ -25,16 +25,6 @@ songs2 <-
 
 ```{r, echo=FALSE}
 inputPanel(
-  selectInput("x", label = "x-axis variable:",
-    choices = c("Danceability" = "danceability",
-                "Energy" = "energy",
-                "Loudness" = "loudness",
-                "Speechiness" = "speechiness", 
-                "Acousticness" = "acousticness", 
-                "Instrumentalness" = "instrumentalness",
-                "Liveness" = "liveness",
-                "Valence" = "valence",
-                "Tempo" = "tempo")),
  selectInput("y", label = "y-axis variable:",
     choices = c("Danceability" = "danceability",
                 "Energy" = "energy",
@@ -45,7 +35,18 @@ inputPanel(
                 "Liveness" = "liveness",
                 "Valence" = "valence",
                 "Tempo" = "tempo")),
- selectInput("genre", label = "Genre:", 
+ selectInput("genre", label = "Genre 1:", 
+             choices = c("R&B" = "R&B",
+                         "Christian" = "christian",
+                         "Country" = "country",
+                         "EDM" = "edm",
+                         "Hip-Hop" = "hip-hop",
+                         "Indie" = "indie",
+                         "Latin" = "latin",
+                         "Pop" = "pop",
+                         "Rap" = "rap",
+                         "Rock" = "rock")),
+ selectInput("genre0", label = "Genre 2:", 
              choices = c("R&B" = "R&B",
                          "Christian" = "christian",
                          "Country" = "country",
@@ -60,9 +61,9 @@ inputPanel(
 
 renderPlot({
   filtered_songs <- songs %>%
-    filter(genre == input$genre)
+    filter(genre %in% c(input$genre, input$genre0))
   
-  ggplot(filtered_songs, aes(y = .data[[input$y]], x = .data[[input$x]])) + 
+  ggplot(filtered_songs, aes(y = .data[[input$y]], x = album_release_year, color = genre)) + 
     geom_point() + 
     geom_smooth(method = "lm", se = F)
 })
@@ -83,7 +84,18 @@ inputPanel(
                 "Liveness" = "liveness",
                 "Valence" = "valence",
                 "Tempo" = "tempo")),
- selectInput("genre2", label = "Genre:", 
+ selectInput("genre2", label = "Genre 1:", 
+             choices = c("R&B" = "R&B",
+                         "Christian" = "christian",
+                         "Country" = "country",
+                         "EDM" = "edm",
+                         "Hip-Hop" = "hip-hop",
+                         "Indie" = "indie",
+                         "Latin" = "latin",
+                         "Pop" = "pop",
+                         "Rap" = "rap",
+                         "Rock" = "rock")),
+ selectInput("genre02", label = "Genre 2:", 
              choices = c("R&B" = "R&B",
                          "Christian" = "christian",
                          "Country" = "country",
@@ -98,9 +110,9 @@ inputPanel(
 
 renderPlot({
   filtered_songs <- songs %>%
-    filter(genre == input$genre2)
+    filter(genre %in% c(input$genre2, input$genre02))
   
-  ggplot(filtered_songs, aes(x = .data[[input$x2]])) + 
+  ggplot(filtered_songs, aes(x = .data[[input$x2]], fill = genre)) + 
     geom_histogram() 
 })
 ```
@@ -192,3 +204,5 @@ renderPlot({
     facet_wrap(~genre)
 })
 ```
+
+
