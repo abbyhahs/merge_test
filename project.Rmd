@@ -23,6 +23,9 @@ songs2 <-
 1
 ==========================
 
+Column {data-width = 200}
+-------------------------
+
 ```{r, echo=FALSE}
 inputPanel(
  selectInput("y", label = "y-axis variable:",
@@ -69,8 +72,8 @@ renderPlot({
 })
 ```
 
-2
-==========================
+Column {data-width = 200}
+-------------------------
 
 ```{r, echo = FALSE}
 inputPanel(
@@ -117,8 +120,11 @@ renderPlot({
 })
 ```
 
-3
+2
 ==========================
+
+Column {data-width = 200}
+-------------------------
 
 ```{r, echo=FALSE}
 inputPanel(
@@ -148,8 +154,8 @@ renderPlot({
 })
 ```
 
-4
-==========================
+Column {data-width = 200}
+-------------------------
 
 ```{r, echo = FALSE}
 inputPanel(
@@ -177,8 +183,9 @@ renderPlot({
 })
 ```
 
-5
+3
 ==========================
+checkbox, pick genres.somehow
 
 ```{r, echo=FALSE}
 inputPanel(
@@ -199,9 +206,8 @@ inputPanel(
 
 renderPlot({
   
-  ggplot(songs, aes(y = .data[[input$y5]], x = .data[[input$x5]], fill = genre)) + 
-    geom_violin() +
-    facet_wrap(~genre)
+  ggplot(songs, aes(y = .data[[input$y5]], x = .data[[input$x5]], color = genre)) + 
+    geom_point()
 })
 ```
 
