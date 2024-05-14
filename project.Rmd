@@ -8,6 +8,9 @@ runtime: shiny
 ```{r global, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(ggplot2)
+library(ggthemes)
+library(viridis)
 ```
 
 ```{r, echo = FALSE}
@@ -68,7 +71,7 @@ renderPlot({
   
   ggplot(filtered_songs, aes(y = .data[[input$y]], x = album_release_year, color = genre)) + 
     geom_point() + 
-    geom_smooth(method = "lm", se = F)
+    geom_smooth(method = "lm", se = F) + labs(x = "Album Release Year", color = "Genre") + theme_classic() + scale_color_calc()
 })
 ```
 
@@ -116,17 +119,16 @@ renderPlot({
     filter(genre %in% c(input$genre2, input$genre02))
   
   ggplot(filtered_songs, aes(x = .data[[input$x2]], fill = genre)) + 
-    geom_histogram() 
+    geom_density(alpha = 0.5) + labs(fill = "Genre") + theme_classic() + scale_fill_calc()
 })
 ```
 
 2
 ==========================
 
-Column {data-width = 200}
--------------------------
+<center>
 
-```{r, echo=FALSE}
+```{r, echo = FALSE}
 inputPanel(
  selectInput("genre3", label = "Genre:", 
              choices = c("R&B" = "R&B",
@@ -143,52 +145,43 @@ inputPanel(
              choices = c("Number of Songs/Album" = "num_songsalbum",
                          "Duration (min)" = "duration_m"))
 )
+```
 
+Column 
+-------------------------
+
+```{r, echo = FALSE}
 renderPlot({
   songs2 |>
     filter(genre == input$genre3) |>
     group_by(album_name) |>
   mutate(num_songsalbum = n()) |>
   ggplot(aes(y = .data[[input$album3]], x = album_release_year, color = name)) + 
-    geom_point() + geom_smooth(method = "lm", se = FALSE)
+    geom_point() + geom_smooth(method = "lm", se = FALSE) + labs(x = "Album Release Year", color = "Artist Name")+ theme_classic() + scale_color_calc()
 })
-```
-
-Column {data-width = 200}
--------------------------
-
-```{r, echo = FALSE}
-inputPanel(
- selectInput("genre4", label = "Genre:", 
-             choices = c("R&B" = "R&B",
-                         "Christian" = "christian",
-                         "Country" = "country",
-                         "EDM" = "edm",
-                         "Hip-Hop" = "hip-hop",
-                         "Indie" = "indie",
-                         "Latin" = "latin",
-                         "Pop" = "pop",
-                         "Rap" = "rap",
-                         "Rock" = "rock"))
-)
 
 renderPlot({
   filtered_songs <- songs %>%
-    filter(genre == input$genre4) |>
+    filter(genre == input$genre3) |>
    group_by(album_name) |>
   mutate(num_songsalbum = n()) 
   
   ggplot(filtered_songs, aes(x = popularity, y = num_songsalbum, color = name)) + 
-    geom_boxplot() 
+    geom_boxplot() + labs(x = "Popularity", y = "Number of Songs per Album") + theme_classic() + scale_color_calc()
 })
 ```
 
 3
 ==========================
-checkbox, pick genres.somehow
 
-```{r, echo=FALSE}
+Inputs {.sidebar}
+-------------------------
+
+```{r, echo=FALSE, eval = FALSE}
 inputPanel(
+  checkboxGroupInput("genre_check", "Select Genres:",
+                     choices = c("R&B", "Christian", "Country", "EDM", "Hip-Hop", "Indie", "Latin", "Pop", "Rap", "Rock"),
+                     selected = NULL),
   selectInput("x5", label = "x-axis variable:",
     choices = c("Popularity" = "popularity",
                 "Followers" = "followers.total")),
@@ -203,12 +196,28 @@ inputPanel(
                 "Valence" = "valence",
                 "Tempo" = "tempo"))
 )
+```
+
+Column 
+-------------------------
+
+```{r, echo = FALSE, eval = FALSE}
+#renderPlot({
+  #filtered_songs <- songs %>%
+    #filter(genre %in% input$genre_check)
+  #ggplot(filtered_songs, aes(y = .data[[input$y5]], x = .data[[input$x5]])) + 
+ #   geom_violin()
+#})
 
 renderPlot({
-  
-  ggplot(songs, aes(y = .data[[input$y5]], x = .data[[input$x5]], color = genre)) + 
-    geom_point()
+     if (input$genre_check) 
+        ggplot(songs, aes(x = .data[[input$x5]], y = .data[[input$y5]]))  + 
+         geom_violin() 
+     else if (!input$genre_check)      
+        ggplot(songs, aes(x = .data[[input$x5]], y = .data[[input$y5]]))  + 
+          geom_violin()
 })
+
 ```
 
 
