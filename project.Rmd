@@ -11,6 +11,7 @@ library(tidyverse)
 library(ggplot2)
 library(ggthemes)
 library(viridis)
+library(rlang)
 ```
 
 ```{r, echo = FALSE}
@@ -25,6 +26,8 @@ songs2 <-
 
 1
 ==========================
+
+The first question we chose to look at is how the various audio features differ by genre. The left plot analyzes these features over time and the right plot measures the frequency of each feature by genre.
 
 Column {data-width = 200}
 -------------------------
@@ -126,7 +129,7 @@ renderPlot({
 2
 ==========================
 
-<center>
+The second question we chose to look at was how the number of songs per album differs for the top artists within each genre. The left plot analyzes the number of songs per album over time and the right plot looks at how the amount of songs per album differs based on the artists popularity score out of 100.
 
 ```{r, echo = FALSE}
 inputPanel(
@@ -144,7 +147,7 @@ inputPanel(
 )
 ```
 
-Column 
+Column {data-width = 200}
 -------------------------
 
 ```{r, echo = FALSE}
@@ -156,7 +159,12 @@ renderPlot({
   ggplot(aes(y = num_songsalbum, x = album_release_year, color = name)) + 
     geom_point() + geom_smooth(method = "lm", se = FALSE) + labs(x = "Album Release Year", color = "Artist Name", y = "Number of Songs per Album")+ theme_classic() + scale_color_calc()
 })
+```
 
+Column {data-width = 200}
+-------------------------------------
+
+```{r, echo = FALSE}
 renderPlot({
   filtered_songs <- songs %>%
     filter(genre == input$genre3) |>
@@ -164,7 +172,7 @@ renderPlot({
   mutate(num_songsalbum = n()) 
   
   ggplot(filtered_songs, aes(x = popularity, y = num_songsalbum, color = name)) + 
-    geom_boxplot() + labs(x = "Popularity", y = "Number of Songs per Album") + theme_classic() + scale_color_calc()
+    geom_boxplot() + labs(x = "Popularity", y = "Number of Songs per Album", color = "Artist Name") + theme_classic() + scale_color_calc()
 })
 ```
 
@@ -193,25 +201,22 @@ inputPanel(
                 "Valence" = "valence",
                 "Tempo" = "tempo"))
 )
+
 ```
 
 Column 
 -------------------------
 
 ```{r, echo = FALSE}
-#renderPlot({
-  #filtered_songs <- songs %>%
-    #filter(genre %in% input$genre_check)
-  #ggplot(filtered_songs, aes(y = .data[[input$y5]], x = .data[[input$x5]])) + 
- #   geom_violin()
-#})
+genre2 <- reactive({
+  songs |>
+    filter(genre %in% input$genre_check)
+})
 
 renderPlot({
-  songs |>
-    filter(genre %in% input$genre_check) |>
-    ggplot(aes(x = .data[[input$x5]], y = .data[[input$y5]])) +
-    geom_point()})
-
+    ggplot(genre2, aes(x = album_release_year, y = .data[[input$y5]])) +
+    geom_point()
+  })
 ```
 
-
+reactive then render plot, look through sample projects
