@@ -140,10 +140,7 @@ inputPanel(
                          "Latin" = "latin",
                          "Pop" = "pop",
                          "Rap" = "rap",
-                         "Rock" = "rock")), 
- selectInput("album3", label = "Album Qualities:", 
-             choices = c("Number of Songs/Album" = "num_songsalbum",
-                         "Duration (min)" = "duration_m"))
+                         "Rock" = "rock"))
 )
 ```
 
@@ -156,8 +153,8 @@ renderPlot({
     filter(genre == input$genre3) |>
     group_by(album_name) |>
   mutate(num_songsalbum = n()) |>
-  ggplot(aes(y = .data[[input$album3]], x = album_release_year, color = name)) + 
-    geom_point() + geom_smooth(method = "lm", se = FALSE) + labs(x = "Album Release Year", color = "Artist Name")+ theme_classic() + scale_color_calc()
+  ggplot(aes(y = num_songsalbum, x = album_release_year, color = name)) + 
+    geom_point() + geom_smooth(method = "lm", se = FALSE) + labs(x = "Album Release Year", color = "Artist Name", y = "Number of Songs per Album")+ theme_classic() + scale_color_calc()
 })
 
 renderPlot({
@@ -177,7 +174,7 @@ renderPlot({
 Inputs {.sidebar}
 -------------------------
 
-```{r, echo=FALSE, eval = FALSE}
+```{r, echo=FALSE}
 inputPanel(
   checkboxGroupInput("genre_check", "Select Genres:",
                      choices = c("R&B", "Christian", "Country", "EDM", "Hip-Hop", "Indie", "Latin", "Pop", "Rap", "Rock"),
@@ -201,7 +198,7 @@ inputPanel(
 Column 
 -------------------------
 
-```{r, echo = FALSE, eval = FALSE}
+```{r, echo = FALSE}
 #renderPlot({
   #filtered_songs <- songs %>%
     #filter(genre %in% input$genre_check)
@@ -210,13 +207,10 @@ Column
 #})
 
 renderPlot({
-     if (input$genre_check) 
-        ggplot(songs, aes(x = .data[[input$x5]], y = .data[[input$y5]]))  + 
-         geom_violin() 
-     else if (!input$genre_check)      
-        ggplot(songs, aes(x = .data[[input$x5]], y = .data[[input$y5]]))  + 
-          geom_violin()
-})
+  songs |>
+    filter(genre %in% input$genre_check) |>
+    ggplot(aes(x = .data[[input$x5]], y = .data[[input$y5]])) +
+    geom_point()})
 
 ```
 
