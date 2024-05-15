@@ -1,0 +1,86 @@
+---
+title: "Final_Belle"
+output:
+  html_document:
+    df_print: paged
+runtime: shiny
+---
+
+```{r global, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(ggthemes)
+library(viridis)
+library(ggmosaic)
+library(shiny)
+```
+
+```{r, echo = FALSE}
+songs = read_rds("songs.csv")
+genres = read_rds("genres.csv")
+artists = read_rds("artists.csv")
+
+songs2 <- 
+  songs |>
+  mutate(duration_m = duration_ms/60000)
+
+```
+
+```{r, echo = FALSE}
+inputPanel(
+ selectInput("y14", label = "y-axis variable:",
+    choices = c("Mode" = "mode_name",
+                "Key" = "key_name",
+                "Key & Mode" = "key_mode"))
+)
+
+renderPlot({
+
+  ggplot(data = songs2) + 
+    geom_mosaic(aes(x = product(.data[[input$y14]], genre), fill = .data[[input$y14]])) +
+    labs(x = "Genre",
+         title = "Key Mode Per Genre",
+         fill = "Key Mode") +
+    theme_mosaic() +
+    theme_classic() + 
+    scale_fill_viridis()
+  })
+  
+```
+
+```{r}
+ggplot(data = songs) + 
+  geom_mosaic(aes(x = product(genre), fill = mode_name))+
+  labs(x = "Genre",
+       title = "Mode For Each Genre",
+       fill = "Mode") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+
+ggplot(data = songs) + 
+  geom_mosaic(aes(x = product(genre), fill = key_name))+
+  labs(x = "Genre",
+       title = "Key For Each Genre",
+       fill = "Key") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+
+ggplot(data = songs) + 
+  geom_mosaic(aes(x = product(genre), fill = key_mode))+
+  labs(x = "Genre",
+       title = "Mode Key For Each Genre",
+       fill = "Mode Key") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+```{r}
+ggplot(data = songs) + 
+  geom_mosaic(aes(x = product(mode_name), fill = key_name))+
+  labs(x = "Mode",
+       title = "Key For Each Mode",
+       fill = "Key",
+       x = "Mode") 
+```
+
+
