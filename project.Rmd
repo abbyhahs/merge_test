@@ -1,7 +1,9 @@
 ---
-title: "Project"
-output: flexdashboard::flex_dashboard
+title: "Spotify Audio Analysis"
 runtime: shiny
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
 ---
 
 
@@ -26,12 +28,12 @@ songs2 <-
   mutate(duration_m = duration_ms/60000)
 ```
 
-1
+Audio Features part 1
 ==========================
 
 The first question we chose to look at is how the various audio features differ by genre. The left plot analyzes these features over time and the right plot measures the frequency of each feature by genre.
 
-Column {data-width = 200}
+Row
 -------------------------
 
 ```{r, echo=FALSE}
@@ -70,20 +72,6 @@ inputPanel(
                          "Rock" = "rock"))
 )
 
-renderPlot({
-  filtered_songs <- songs %>%
-    filter(genre %in% c(input$genre, input$genre0))
-  
-  ggplot(filtered_songs, aes(y = .data[[input$y]], x = album_release_year, color = genre)) + 
-    geom_point() + 
-    geom_smooth(method = "lm", se = F) + labs(x = "Album Release Year", color = "Genre") + theme_classic() + scale_color_calc()
-})
-```
-
-Column {data-width = 200}
--------------------------
-
-```{r, echo = FALSE}
 inputPanel(
   selectInput("x2", label = "x-axis variable:",
     choices = c("Danceability" = "danceability",
@@ -118,6 +106,20 @@ inputPanel(
                          "Rap" = "rap",
                          "Rock" = "rock"))
 )
+```
+
+Row
+-------------------------
+
+```{r, echo = FALSE}
+renderPlot({
+  filtered_songs <- songs %>%
+    filter(genre %in% c(input$genre, input$genre0))
+  
+  ggplot(filtered_songs, aes(y = .data[[input$y]], x = album_release_year, color = genre)) + 
+    geom_point() + 
+    geom_smooth(method = "lm", se = F) + labs(x = "Album Release Year", color = "Genre") + theme_classic() + scale_color_calc()
+})
 
 renderPlot({
   filtered_songs <- songs %>%
@@ -128,12 +130,14 @@ renderPlot({
 })
 ```
 
+Row
+-------------------------
 
 With these plots, the viewer is able to observe many differences and similarities between the genres and the audio features. Some observations we made are that:
 
 - 
 
-2
+Audio Features part 2
 ==========================
 
 Inputs {.sidebar}
@@ -161,10 +165,13 @@ inputPanel(
 
 ```
 
-Column
+Row
 -------------------------------------
+
 Our second question was how do the various audio features differ for each genre based on each of the top artist's total followers and popularity score out of 100.
 
+Row
+-------------------------------------
 
 ```{r, echo = FALSE}
 genre3 <- reactive({
@@ -183,12 +190,15 @@ renderPlot({
 })
 ```
 
+Row
+-------------------------------------
+
 The ability to select any amount of the 10 genres gives viewers the freedom to explore differences in audio features based on either each artists popularity score and each artist's total followers. 
 
 Some trends we observed are:
 - 
 
-3
+Artist Trends
 ==========================
 
 The third question we chose to look at was how the number of songs per album differs for the top artists within each genre. The left plot analyzes the number of songs per album over time and the right plot looks at how the amount of songs per album differs based on the artists popularity score out of 100.
@@ -209,7 +219,7 @@ inputPanel(
 )
 ```
 
-Column {data-width = 200}
+Row
 -------------------------
 
 ```{r, echo = FALSE}
@@ -223,9 +233,6 @@ renderPlot({
 })
 ```
 
-Column {data-width = 200}
--------------------------------------
-
 ```{r, echo = FALSE}
 renderPlot({
   filtered_songs <- songs %>%
@@ -238,3 +245,14 @@ renderPlot({
 })
 ```
 
+Concluding Thoughts
+==========================
+
+Although we outlined a few questions, our shiny app gives viewers the flexibility to look at many different questions regarding Spotify artists and their audio features. We hope that viewers may be able to learn more about their favorite genre and be able to find similarities and differences between their favorite and least favorite genres.
+
+
+**Tribulations and Victories of Data Acquisition and Wrangling:**
+
+After acquiring a Spotify ID and access token, we were able to view all Spotify data on an artist or song by using either it's name or it's unique ID. Originally, we had wanted to analyze at least five artists per genre in order to build a larger dataset and have more accurate analysis. However, our for loop was inconsistent with the large amount of data and had a difficult time finding the correct artists based of off their ID. Each time we ran the for loop, we would receive a dataset with a different number of artists. Due to this, we ended up reducing our sample size and looking at between three and five artists per genre. This was a significantly smaller number and allowed the for loop to work accurately, which enabled us to produce our final dataset. 
+
+by Belle Schmidt and Abby Hahs
