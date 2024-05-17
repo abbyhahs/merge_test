@@ -117,7 +117,7 @@ renderPlot({
     filter(genre == input$genre4)|>
     
   ggplot() +
-    geom_bar(aes(x = name, fill = mode_name)) +
+    geom_mosaic(aes(x = product(name), fill = mode_name)) +
     labs(x = "Singer Name", y = "Mode of Song", color = "Artist Name") + 
     theme_classic() + 
     scale_color_calc()
