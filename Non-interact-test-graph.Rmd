@@ -4,6 +4,30 @@ output: html_document
 date: "2024-05-16"
 ---
 
+
+
+```{r global, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(ggthemes)
+library(viridis)
+library(ggmosaic)
+library(shiny)
+library(ggiraph)
+```
+
+```{r, echo = FALSE}
+songs = read_rds("songs.csv")
+genres = read_rds("genres.csv")
+artists = read_rds("artists.csv")
+
+songs2 <- 
+  songs |>
+  mutate(duration_m = duration_ms/60000)
+
+```
+
 ```{r}
 filtered_rb <- songs |>
   filter(genre == "R&B")
@@ -285,4 +309,26 @@ ggplot(data = filtered_rock) +
   geom_mosaic_text(aes(x = product(mode_name, name),
 label = after_stat(.wt))) +
   theme(axis.text.x=element_text(size=5))
+```
+
+# Attempt to make mossaic interactive so when you hover it shows the text
+```{r}
+#ggplot(data = songs) + 
+  geom_mosaic(aes(x = product(genre), fill = mode_name))+
+  labs(x = "Genre",
+       title = "Mode For Each Genre",
+       fill = "Mode") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  geom_text_interactive(aes(x = product(mode_name, genre),
+label = after_stat(.wt))) 
+
+ggplot(data = songs) + 
+  geom_mosaic(aes(x = product(genre), fill = key_name))+
+  labs(x = "Genre",
+       title = "Key For Each Genre",
+       fill = "Key") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  geom_text_interactive(aes(x = product(key_name, genre),
+label = after_stat(.wt)))
+
 ```
