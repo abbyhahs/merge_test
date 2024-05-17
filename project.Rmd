@@ -12,6 +12,8 @@ library(ggplot2)
 library(ggthemes)
 library(viridis)
 library(rlang)
+library(flexdashboard)
+library(dplyr)
 ```
 
 ```{r, echo = FALSE}
@@ -126,10 +128,70 @@ renderPlot({
 })
 ```
 
+
+With these plots, the viewer is able to observe many differences and similarities between the genres and the audio features. Some observations we made are that:
+
+- 
+
 2
 ==========================
 
-The second question we chose to look at was how the number of songs per album differs for the top artists within each genre. The left plot analyzes the number of songs per album over time and the right plot looks at how the amount of songs per album differs based on the artists popularity score out of 100.
+Inputs {.sidebar}
+-------------------------
+
+```{r, echo=FALSE}
+inputPanel(
+  checkboxGroupInput("genre_check", "Select Genres:",
+                     choices = c("All", 
+                              unique(as.character(songs$genre))),                         selected = "All"),
+  selectInput("x5", label = "x-axis variable:",
+    choices = c("Popularity" = "popularity",
+                "Followers" = "followers.total")),
+ selectInput("y5", label = "y-axis variable:",
+    choices = c("Danceability" = "danceability",
+                "Energy" = "energy",
+                "Loudness" = "loudness",
+                "Speechiness" = "speechiness", 
+                "Acousticness" = "acousticness", 
+                "Instrumentalness" = "instrumentalness",
+                "Liveness" = "liveness",
+                "Valence" = "valence",
+                "Tempo" = "tempo"))
+)
+
+```
+
+Column
+-------------------------------------
+Our second question was how do the various audio features differ for each genre based on each of the top artist's total followers and popularity score out of 100.
+
+
+```{r, echo = FALSE}
+genre3 <- reactive({
+  if("All" %in% input$genre_check) {
+    filtered_songs <- songs
+  } else {
+    filtered_songs <- songs %>%
+      filter(genre %in% input$genre_check)
+  }
+  filtered_songs
+})
+
+renderPlot({
+  ggplot(genre3(), aes(x = .data[[input$x5]], y = .data[[input$y5]], color = genre)) +
+    geom_point(position = position_jitterdodge()) + labs(color = "Genre") + theme_classic() + scale_color_calc()
+})
+```
+
+The ability to select any amount of the 10 genres gives viewers the freedom to explore differences in audio features based on either each artists popularity score and each artist's total followers. 
+
+Some trends we observed are:
+- 
+
+3
+==========================
+
+The third question we chose to look at was how the number of songs per album differs for the top artists within each genre. The left plot analyzes the number of songs per album over time and the right plot looks at how the amount of songs per album differs based on the artists popularity score out of 100.
 
 ```{r, echo = FALSE}
 inputPanel(
@@ -176,47 +238,3 @@ renderPlot({
 })
 ```
 
-3
-==========================
-
-Inputs {.sidebar}
--------------------------
-
-```{r, echo=FALSE}
-inputPanel(
-  checkboxGroupInput("genre_check", "Select Genres:",
-                     choices = c("R&B", "Christian", "Country", "EDM", "Hip-Hop", "Indie", "Latin", "Pop", "Rap", "Rock"),
-                     selected = NULL),
-  selectInput("x5", label = "x-axis variable:",
-    choices = c("Popularity" = "popularity",
-                "Followers" = "followers.total")),
- selectInput("y5", label = "y-axis variable:",
-    choices = c("Danceability" = "danceability",
-                "Energy" = "energy",
-                "Loudness" = "loudness",
-                "Speechiness" = "speechiness", 
-                "Acousticness" = "acousticness", 
-                "Instrumentalness" = "instrumentalness",
-                "Liveness" = "liveness",
-                "Valence" = "valence",
-                "Tempo" = "tempo"))
-)
-
-```
-
-Column 
--------------------------
-
-```{r, echo = FALSE}
-genre2 <- reactive({
-  songs |>
-    filter(genre %in% input$genre_check)
-})
-
-renderPlot({
-    ggplot(genre2, aes(x = album_release_year, y = .data[[input$y5]])) +
-    geom_point()
-  })
-```
-
-reactive then render plot, look through sample projects
