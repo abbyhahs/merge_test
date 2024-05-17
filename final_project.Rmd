@@ -133,9 +133,46 @@ renderPlot({
 Row
 -------------------------
 
-With these plots, the viewer is able to observe many differences and similarities between the genres and the audio features. Some observations we made are that:
+**Basic Definitions:**
 
-- 
+- Danceability: How suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, and beat strength.  
+
+- Energy: A measure of intensity and activity that ranges from 0.0 to 1.0.
+
+- Loudness: The overall loudness of a track in decibels (dB).
+
+- Speechiness: Detects the presence of spoken words in a track. The values range from 0.0 to 1.0.
+
+- Acousticness: A measure of how acoustic a track is. Ranges from 0.0 to 1.0.
+
+- Instrumentalness: Measures the amount of vocal content in a track. Ranges from 0.0 to 1.0 with 1.0 being more instrumental.
+
+- Liveness: Detects the presence of an audience in the track, such as if the track was performed live or not. Ranges from 0.0 to 1.0.
+
+- Valence: Describes the musical positiveness of a track. The more positive a track is, the closer the value is to 1.0.
+
+- Tempo: The overall estimated tempo of a track in beats per minute (BPM).
+
+Row
+-------------------------
+The viewer has the ability to compare different genres and observe how the audio features have changed over time or compare the frequency of various audio features.
+
+**Some observations we made are:**
+
+- For the majority of genres, danceability, loudness, and liveness have increased over time.
+
+- For the majority of genres, energy, speechiness, acousticness, instrumentalness, valence, and tempo have decreased or stayed constant over time.
+
+- Genres with high Danceability also tend to have high Energy and Loudness.
+
+- All genres have low Speechiness, Acousticness, Instrumentalness, and Liveness.
+
+- R&B, Hip-Hop, and Latin all have similar audio features.
+
+- Country, Rock, and Indie have similar features.
+
+- Pop and EDM have similar features.
+
 
 Audio Features part 2
 ==========================
@@ -148,9 +185,6 @@ inputPanel(
   checkboxGroupInput("genre_check", "Select Genres:",
                      choices = c("All", 
                               unique(as.character(songs$genre))),                         selected = "All"),
-  selectInput("x5", label = "x-axis variable:",
-    choices = c("Popularity" = "popularity",
-                "Followers" = "followers.total")),
  selectInput("y5", label = "y-axis variable:",
     choices = c("Danceability" = "danceability",
                 "Energy" = "energy",
@@ -168,7 +202,7 @@ inputPanel(
 Row
 -------------------------------------
 
-Our second question was how do the various audio features differ for each genre based on each of the top artist's total followers and popularity score out of 100.
+Our second question was how do the various audio features differ for each genre based on each of the top artist's popularity score out of 100.
 
 Row
 -------------------------------------
@@ -185,18 +219,24 @@ genre3 <- reactive({
 })
 
 renderPlot({
-  ggplot(genre3(), aes(x = .data[[input$x5]], y = .data[[input$y5]], color = genre)) +
-    geom_point(position = position_jitterdodge()) + labs(color = "Genre") + theme_classic() + scale_color_calc()
+  ggplot(genre3(), aes(x = popularity, y = .data[[input$y5]], color = genre)) +
+    geom_point(position = position_jitterdodge()) + 
+    labs(color = "Genre", x = "Popularity") + theme_classic() + scale_color_calc()
 })
 ```
 
 Row
 -------------------------------------
 
-The ability to select any amount of the 10 genres gives viewers the freedom to explore differences in audio features based on either each artists popularity score and each artist's total followers. 
+The ability to select any number of the 10 genres gives viewers the freedom to explore differences in audio features based on  each artists popularity score.
 
-Some trends we observed are:
-- 
+**Some trends we observed are:**
+
+- As artist popularity increases, both Instrumentalness and Liveness decrease.
+
+- Regardless of popularity, all genres have high Loudness and low Speechiness.
+
+- As a whole, artist popularity does not seem to determine any changes in the levels of the various audio features. 
 
 Artist Trends
 ==========================
@@ -244,6 +284,22 @@ renderPlot({
     geom_boxplot() + labs(x = "Popularity", y = "Number of Songs per Album", color = "Artist Name") + theme_classic() + scale_color_calc()
 })
 ```
+
+Row
+-------------------------
+
+Viewers have the ability to change the genre that is shown in order to find the most popular artists of each genre. They can then observe how each artist's number of songs per genre has changed over time and how the artist's compare to each other in regards to number of songs per album.
+
+**Observations:**
+
+- For all genres, we found that there has been an overall increase in the number of songs per album over time. 
+
+- For both EDM and Pop, the artist with the highest popularity has the highest average number of songs per album.
+
+- The top artist for R&B, EDM, and Pop have the most songs per album in 2020.
+
+- It's interesting that the top artists typically don't have the highest number of songs per album. Maybe they have already established a reputation and don't feel pressured to release large quantities of songs at one time.
+
 
 Concluding Thoughts
 ==========================
