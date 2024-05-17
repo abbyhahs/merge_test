@@ -1,0 +1,288 @@
+---
+title: "Non_interactive_test_graphs"
+output: html_document
+date: "2024-05-16"
+---
+
+```{r}
+filtered_rb <- songs |>
+  filter(genre == "R&B")
+
+filtered_rb
+
+
+ggplot(data = filtered_rb) + 
+  geom_mosaic(aes(x = product(name), fill = key_name))+
+  labs(x = "Artist Name",
+       title = "Key For Top Artists in Selected Genre",
+       fill = "Key") +
+  geom_mosaic_text(aes(x = product(key_name, name),
+label = after_stat(.wt))) +
+  theme(axis.text.x=element_text(size=8))
+
+
+ggplot(data = filtered_rb) + 
+  geom_mosaic(aes(x = product(name), fill = mode_name))+
+  labs(x = "Artist Name",
+       title = "Mode For Top Artists in Selected Genre",
+       fill = "Mode") +
+  geom_mosaic_text(aes(x = product(mode_name, name),
+label = after_stat(.wt))) +
+  theme(axis.text.x=element_text(size=7))
+
+ggplot(data = filtered_rb) + 
+  geom_mosaic(aes(x = product(name), fill = key_mode))+
+  labs(x = "Artist Name",
+       title = "Key & Mode For Top Artists in Selected Genre",
+       fill = "Key & Mode") +
+  theme(axis.text.x=element_text(size=7))
+```
+
+```{r}
+filtered_christian <- songs |>
+  filter(genre == "christian")
+
+filtered_christian2 <- songs |>
+  filter(genre == "christian", mode_name == "minor") 
+
+filtered_christian3 <- songs |>
+  filter(genre == "christian", mode_name == "major") 
+
+ggplot(data = filtered_christian) + 
+  geom_mosaic(aes(x = product(name), fill = key_name))+
+  labs(x = "Artist Name",
+       title = "Key For Top Artists in Selected Genre",
+       fill = "Key") +
+  geom_mosaic_text(aes(x = product(key_name, name),
+label = after_stat(.wt))) +
+  theme(axis.text.x=element_text(size=6))
+
+ggplot(data = filtered_christian) + 
+  geom_mosaic(aes(x = product(name), fill = mode_name))+
+  labs(x = "Artist Name",
+       title = "Mode For Top Artists in Selected Genre",
+       fill = "Mode") +
+  geom_mosaic_text(aes(x = product(mode_name, name),
+label = after_stat(.wt))) +
+  theme(axis.text.x=element_text(size=6))
+
+ggplot(data = filtered_christian2) + 
+  geom_mosaic(aes(x = product(name), fill = key_name))+
+  labs(x = "Artist Name",
+       title = "Key & Mode For Top Artists in Selected Genre",
+       fill = "Key & Mode") +
+  theme(axis.text.x=element_text(size=5))
+
+ggplot(data = filtered_christian) + 
+  geom_mosaic(aes(x = product(name), fill = key_mode))+
+  labs(x = "Artist Name",
+       title = "Key & Mode For Top Artists in Selected Genre",
+       fill = "Key & Mode") +
+  theme(axis.text.x=element_text(size=5))
+```
+
+```{r}
+filtered_country <- songs |>
+  filter(genre == "country")
+
+
+
+
+ggplot(data = filtered_country) + 
+  geom_mosaic(aes(x = product(name), fill = key_name))+
+  labs(x = "Artist Name",
+       title = "Key For Top Artists in Selected Genre",
+       fill = "Key") +
+  geom_mosaic_text(aes(x = product(key_name, name),
+label = after_stat(.wt))) +
+  theme(axis.text.x=element_text(size=6))
+
+ggplot(data = filtered_country) + 
+  geom_mosaic(aes(x = product(name), fill = mode_name))+
+  labs(x = "Artist Name",
+       title = "Mode For Top Artists in Selected Genre",
+       fill = "Mode") +
+  geom_mosaic_text(aes(x = product(mode_name, name),
+label = after_stat(.wt))) +
+  theme(axis.text.x=element_text(size=7))
+
+```
+
+```{r}
+filtered_edm <- songs |>
+  filter(genre == "edm")
+
+
+
+ggplot(data = filtered_edm) + 
+  geom_mosaic(aes(x = product(name), fill = key_name))+
+  labs(x = "Artist Name",
+       title = "Key For Top Artists in Selected Genre",
+       fill = "Key") +
+  geom_mosaic_text(aes(x = product(key_name, name),
+label = after_stat(.wt))) +
+  theme(axis.text.x=element_text(size=6))
+
+ggplot(data = filtered_edm) + 
+  geom_mosaic(aes(x = product(name), fill = mode_name))+
+  labs(x = "Artist Name",
+       title = "Mode For Top Artists in Selected Genre",
+       fill = "Mode") +
+  geom_mosaic_text(aes(x = product(mode_name, name),
+label = after_stat(.wt))) +
+  theme(axis.text.x=element_text(size=6))
+
+```
+
+```{r}
+filtered_hip_hop <- songs |>
+  filter(genre == "hip-hop")
+
+
+
+ggplot(data = filtered_hip_hop) + 
+  geom_mosaic(aes(x = product(name), fill = key_name))+
+  labs(x = "Artist Name",
+       title = "Key For Top Artists in Selected Genre",
+       fill = "Key") +
+  geom_mosaic_text(aes(x = product(key_name, name),
+label = after_stat(.wt)))  +
+     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
+
+ggplot(data = filtered_hip_hop) + 
+  geom_mosaic(aes(x = product(name), fill = mode_name))+
+  labs(x = "Artist Name",
+       title = "Mode For Top Artists in Selected Genre",
+       fill = "Mode") +
+  geom_mosaic_text(aes(x = product(mode_name, name),
+label = after_stat(.wt))) +
+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
+
+
+```
+
+```{r}
+filtered_indie <- songs |>
+  filter(genre == "indie")
+
+
+
+ggplot(data = filtered_indie) + 
+  geom_mosaic(aes(x = product(name), fill = key_name))+
+  labs(x = "Artist Name",
+       title = "Key For Top Artists in Selected Genre",
+       fill = "Key") +
+  geom_mosaic_text(aes(x = product(key_name, name),
+label = after_stat(.wt)))  +
+  theme(axis.text.x=element_text(size=8))
+
+
+ggplot(data = filtered_indie) + 
+  geom_mosaic(aes(x = product(name), fill = mode_name))+
+  labs(x = "Artist Name",
+       title = "Mode For Top Artists in Selected Genre",
+       fill = "Mode") +
+  geom_mosaic_text(aes(x = product(mode_name, name),
+label = after_stat(.wt))) +
+  theme(axis.text.x=element_text(size=6))
+```
+
+```{r}
+filtered_latin <- songs |>
+  filter(genre == "latin")
+
+
+
+ggplot(data = filtered_latin) + 
+  geom_mosaic(aes(x = product(name), fill = key_name))+
+  labs(x = "Artist Name",
+       title = "Key For Top Artists in Selected Genre",
+       fill = "Key") +
+  geom_mosaic_text(aes(x = product(key_name, name),
+label = after_stat(.wt)))  +
+  theme(axis.text.x=element_text(size=8))
+
+ggplot(data = filtered_latin) + 
+  geom_mosaic(aes(x = product(name), fill = mode_name))+
+  labs(x = "Artist Name",
+       title = "Mode For Top Artists in Selected Genre",
+       fill = "Mode") +
+  geom_mosaic_text(aes(x = product(mode_name, name),
+label = after_stat(.wt))) +
+  theme(axis.text.x=element_text(size=6))
+```
+
+```{r}
+filtered_pop <- songs |>
+  filter(genre == "pop")
+
+
+
+ggplot(data = filtered_pop) + 
+  geom_mosaic(aes(x = product(name), fill = key_name))+
+  labs(x = "Artist Name",
+       title = "Key For Top Artists in Selected Genre",
+       fill = "Key") +
+  geom_mosaic_text(aes(x = product(key_name, name),
+label = after_stat(.wt)))  +
+  theme(axis.text.x=element_text(size=8))
+
+ggplot(data = filtered_pop) + 
+  geom_mosaic(aes(x = product(name), fill = mode_name))+
+  labs(x = "Artist Name",
+       title = "Mode For Top Artists in Selected Genre",
+       fill = "Mode") +
+  geom_mosaic_text(aes(x = product(mode_name, name),
+label = after_stat(.wt))) +
+  theme(axis.text.x=element_text(size=6))
+```
+
+```{r}
+filtered_rap <- songs |>
+  filter(genre == "rap")
+
+
+
+ggplot(data = filtered_rap) + 
+  geom_mosaic(aes(x = product(name), fill = key_name))+
+  labs(x = "Artist Name",
+       title = "Key For Top Artists in Selected Genre",
+       fill = "Key") +
+  geom_mosaic_text(aes(x = product(key_name, name),
+label = after_stat(.wt)))  +
+  theme(axis.text.x=element_text(size=8))
+
+ggplot(data = filtered_rap) + 
+  geom_mosaic(aes(x = product(name), fill = mode_name))+
+  labs(x = "Artist Name",
+       title = "Mode For Top Artists in Selected Genre",
+       fill = "Mode") +
+  geom_mosaic_text(aes(x = product(mode_name, name),
+label = after_stat(.wt))) +
+  theme(axis.text.x=element_text(size=6))
+```
+
+```{r}
+filtered_rock <- songs |>
+  filter(genre == "rock")
+
+
+
+ggplot(data = filtered_rock) + 
+  geom_mosaic(aes(x = product(name), fill = key_name))+
+  labs(x = "Artist Name",
+       title = "Key For Top Artists in Selected Genre",
+       fill = "Key") +
+  geom_mosaic_text(aes(x = product(key_name, name),
+label = after_stat(.wt)))  +
+  theme(axis.text.x=element_text(size=5))
+
+ggplot(data = filtered_rock) + 
+  geom_mosaic(aes(x = product(name), fill = mode_name))+
+  labs(x = "Artist Name",
+       title = "Mode For Top Artists in Selected Genre",
+       fill = "Mode") +
+  geom_mosaic_text(aes(x = product(mode_name, name),
+label = after_stat(.wt))) +
+  theme(axis.text.x=element_text(size=5))
+```
