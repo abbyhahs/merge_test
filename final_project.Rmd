@@ -447,15 +447,15 @@ Row
 
 - The A key is most common in Rock songs.
 
-- The B and E keys are used very similarly in almost all genres. 
+- The B and E keys are used very similarly across all genres. 
 
-- The C key is most common in Christian and Pop songs. It is one of the most commonly used keys in almost all genres, particularly Christian and Pop.
+- The C key is most common in Christian and Pop songs. It is, however, one of the most commonly used keys in almost all genres.
 
-- The C# key is used by far the most in Rap and Hip-Hop. It is however the most commonly used key in Latin, Rap, and Hip-Hop. 
+- The C# key is used by far the most in Rap and Hip-Hop. In addition to those genres, it is also the most commonly used key in Latin. 
 
 - The D key is most commonly used in Christian and Rock songs. 
 
-- The D# key is rarely used in all genres. 
+- The D# key is rarely used across all genres. 
 
 - The G key is a commonly used key in all genres. 
 
@@ -557,7 +557,7 @@ Row
      
 - Out of the Indie artists, Hozier and the Arctic Monkeys have about half of their songs in major and the other half in minor while Noah Kahan has almost only songs in major. 
  
-- All three of the top pop artists have a very different distribution for songs in major vs. minor. Drake has a relatively even split between the two modes, Taylor Swift sings most of her songs in major, and The Weeknd sings more of his songs in minor. 
+- All three of the top Pop artists have a very different distribution for songs in major vs. minor. Drake has a relatively even split between the two modes, Taylor Swift sings most of her songs in major, and The Weeknd sings more of his songs in minor. 
 
 ### **Right Plot Observations / Conclusions:**
 
@@ -573,18 +573,18 @@ Row
   - Elevation Worship uses/used the G key way less than the other top Christian artists. 
   - The A# key is rarely used by all top Christian artists. 
   - All of the top Christian artists use the D and C keys relatively often. 
+  - Hillsong Worship rarely uses keys with sharps (#).
 
 
 - **Country:**
 
-  - Zach Bryan uses F# way less than the other top Country artists. 
-  - Luke Combs rarely uses A. 
+  - Zach Bryan uses key F# way less than the other top Country artists.
   - Zach Bryan uses a lot of key C, especially compared to the other top country artists.
-
+  - Luke Combs rarely uses key A. 
 
 - **EDM:** 
  
-  - All three EDM artists use almost all keys at a relatively similar rate. Tiesto however uses D# way less than the others and Kygo uses C much more.  
+  - All three EDM artists use almost all keys at a relatively similar rate. Tiesto, however, uses D# way less than the others and Kygo uses C much more.  
 
 
 - **Hip-Hop:** 
@@ -594,30 +594,34 @@ Row
 
 - **Indie:** 
 
-  - Hozier uses the B key way less than the other two popular Indie artists. In fact, the B key is one ofHozier's  least used keys while it is the Arctic Monkeys and  Noah Kahan's most most used key. 
+  - Hozier uses the B key way less than the other two popular Indie artists. In fact, the B key is one of Hozier's  least used keys while it is the Arctic Monkeys and  Noah Kahan's most used key. 
   - Hozier uses the G key the most. 
-  - Noah Kahan and the Arctic Monkeys use the 
 
 
 - **Latin:** 
+
   - All three artists use the C# key the most. 
-  - All three use hte D# key the least. 
-  - In general the distribution of keys used is almost the same for all three artists. 
+  - All three use the D# key the least. 
+  - In general the distribution of keys used is almost the same for all three of the top Latin artists. 
 
 
 - **Pop:** 
+
   - The least commonly used key for all three of the top Pop artists is D#. 
   - Drake most commonly uses C#.
   - Taylor Swift and The Weeknd both use the C key the most, followed by the G key. 
+  - Taylor Swift does not commonly use keys with sharps (#).
 
 
 - **Rap:** 
-  - The C# key is the most common key for all three of the top rap artists.
+
+  - The C# key is the most common key for all three of the top Rap artists.
   - Travis Scott uses the F# key the least while Future and Metro Boomin use the D# key the least. 
 
 
 - **Rock:** 
-  - The Imagine Dragons use the C key the most. 
+
+  - Imagine Dragons use the C key the most. 
   - Linkin Park uses the C# key the most. 
   - Queen used the D key the most. 
-  - The Beattles used A key, C key, D key, E key, and G key frequently (almost equally). They rarely used sharps (#). 
+  - The Beattles used A key, C key, D key, E key, and G key frequently (almost equally). They rarely used any keys with sharps (#). 
