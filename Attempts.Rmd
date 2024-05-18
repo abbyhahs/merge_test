@@ -1,0 +1,83 @@
+---
+title: "Spotify Audio Analysis"
+runtime: shiny
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    theme: sandstone
+
+---
+
+```{r}
+fluidRow(
+    selectInput("y", label = "y-axis variable:",
+      choices = c("Danceability" = "danceability",
+                  "Energy" = "energy",
+                  "Loudness" = "loudness",
+                  "Speechiness" = "speechiness", 
+                  "Acousticness" = "acousticness", 
+                  "Instrumentalness" = "instrumentalness",
+                  "Liveness" = "liveness",
+                  "Valence" = "valence",
+                  "Tempo" = "tempo")),
+    selectInput("genre", label = "Genre 1:", 
+               choices = c("R&B" = "R&B",
+                           "Christian" = "christian",
+                           "Country" = "country",
+                           "EDM" = "edm",
+                           "Hip-Hop" = "hip-hop",
+                           "Indie" = "indie",
+                           "Latin" = "latin",
+                           "Pop" = "pop",
+                           "Rap" = "rap",
+                           "Rock" = "rock")),
+    selectInput("genre0", label = "Genre 2:", 
+               choices = c("R&B" = "R&B",
+                           "Christian" = "christian",
+                           "Country" = "country",
+                           "EDM" = "edm",
+                           "Hip-Hop" = "hip-hop",
+                           "Indie" = "indie",
+                           "Latin" = "latin",
+                           "Pop" = "pop",
+                           "Rap" = "rap",
+                           "Rock" = "rock"))
+  )
+    selectInput("x2", label = "x-axis variable:",
+      choices = c("Danceability" = "danceability",
+                  "Energy" = "energy",
+                  "Loudness" = "loudness",
+                  "Speechiness" = "speechiness", 
+                  "Acousticness" = "acousticness", 
+                  "Instrumentalness" = "instrumentalness",
+                  "Liveness" = "liveness",
+                  "Valence" = "valence",
+                  "Tempo" = "tempo"))
+    selectInput("genre2", label = "Genre 1:", 
+               choices = c("R&B" = "R&B",
+                           "Christian" = "christian",
+                           "Country" = "country",
+                           "EDM" = "edm",
+                           "Hip-Hop" = "hip-hop",
+                           "Indie" = "indie",
+                           "Latin" = "latin",
+                           "Pop" = "pop",
+                           "Rap" = "rap",
+                           "Rock" = "rock"))
+    
+    selectInput("genre02", label = "Genre 2:", 
+               choices = c("R&B" = "R&B",
+                           "Christian" = "christian",
+                           "Country" = "country",
+                           "EDM" = "edm",
+                           "Hip-Hop" = "hip-hop",
+                           "Indie" = "indie",
+                           "Latin" = "latin",
+                           "Pop" = "pop",
+                           "Rap" = "rap",
+                           "Rock" = "rock"))
+  )
+)
+
+```
+

@@ -1,0 +1,19 @@
+**Basic Definitions:**
+
+- Danceability: How suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, and beat strength.  
+
+- Energy: A measure of intensity and activity that ranges from 0.0 to 1.0.
+
+- Loudness: The overall loudness of a track in decibels (dB).
+
+- Speechiness: Detects the presence of spoken words in a track. The values range from 0.0 to 1.0.
+
+- Acousticness: A measure of how acoustic a track is. Ranges from 0.0 to 1.0.
+
+- Instrumentalness: Measures the amount of vocal content in a track. Ranges from 0.0 to 1.0 with 1.0 being more instrumental.
+
+- Liveness: Detects the presence of an audience in the track, such as if the track was performed live or not. Ranges from 0.0 to 1.0.
+
+- Valence: Describes the musical positiveness of a track. The more positive a track is, the closer the value is to 1.0.
+
+- Tempo: The overall estimated tempo of a track in beats per minute (BPM).

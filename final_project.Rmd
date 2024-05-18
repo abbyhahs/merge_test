@@ -4,7 +4,61 @@ runtime: shiny
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
+    theme: sandstone
+
 ---
+
+
+
+About
+==========================
+
+
+### **Additional Information:** 
+
+**Authors:**
+
+Belle Schmidt and Abby Hahs
+
+
+**Objective:**
+
+Although we outlined a few questions, our shiny app gives viewers the flexibility to look at many different questions regarding Spotify artists and their audio features. We hope that viewers may be able to learn more about their favorite genre and be able to find similarities and differences between their favorite and least favorite genres.
+
+
+**Tribulations and Victories of Data Acquisition and Wrangling:**
+
+After acquiring a Spotify ID and access token, we were able to view all Spotify data on an artist or song by using either it's name or it's unique ID. Originally, we had wanted to analyze at least five artists per genre in order to build a larger dataset and have more accurate analysis. However, our for loop was inconsistent with the large amount of data and had a difficult time finding the correct artists based of off their ID. Each time we ran the for loop, we would receive a dataset with a different number of artists. Due to this, we ended up reducing our sample size and looking at between three and five artists per genre. This was a significantly smaller number and allowed the for loop to work accurately, which enabled us to produce our final dataset. 
+
+
+**Color Scheme:**
+
+Since our data was pulled from Spotify, we wanted our graphs to all have a color scheme related to Spotify. Unfortunately for the graph on the Audio Features Part 2 page, too many colors were required for points that overlapped, making it impossible to find a solution where the colors were all differential. As a result, we stuck with the scale_color_calc() color scale. On all the other graphs, we used shades of green, grey, and black, the Spotify colors, to represent the data. On the Audio Features Part 1 page we even used the same shade of green that is in the official Spotify logo. 
+
+
+### **Defining The Variables**
+
+- **Danceability:** How suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, and beat strength.  
+
+- **Energy:** A measure of intensity and activity that ranges from 0.0 to 1.0.
+
+- **Loudness:** The overall loudness of a track in decibels (dB).
+
+- **Speechiness:** Detects the presence of spoken words in a track. The values range from 0.0 to 1.0.
+
+- **Acousticness:** A measure of how acoustic a track is. Ranges from 0.0 to 1.0.
+
+- **Instrumentalness:** Measures the amount of vocal content in a track. Ranges from 0.0 to 1.0 with 1.0 being more instrumental.
+
+- **Liveness:** Detects the presence of an audience in the track, such as if the track was performed live or not. Ranges from 0.0 to 1.0.
+
+- **Valence:** Describes the musical positiveness of a track. The more positive a track is, the closer the value is to 1.0.
+
+- **Tempo:** The overall estimated tempo of a track in beats per minute (BPM).
+
+- **Key:** Represents the musical key of a track (A, A#, B, C, C#, D, D#, E, F, F#, G, and G#).
+
+- **Mode:** Indicates whether a track is in a major or minor key.
 
 
 ```{r global, include=FALSE}
@@ -16,6 +70,9 @@ library(viridis)
 library(rlang)
 library(flexdashboard)
 library(dplyr)
+library(ggmosaic)
+library(shinydashboard)
+library(shiny)
 ```
 
 ```{r, echo = FALSE}
@@ -30,8 +87,6 @@ songs2 <-
 
 Audio Features part 1
 ==========================
-
-The first question we chose to look at is how the various audio features differ by genre. The left plot analyzes these features over time and the right plot measures the frequency of each feature by genre.
 
 Row
 -------------------------
@@ -71,7 +126,6 @@ inputPanel(
                          "Rap" = "rap",
                          "Rock" = "rock"))
 )
-
 inputPanel(
   selectInput("x2", label = "x-axis variable:",
     choices = c("Danceability" = "danceability",
@@ -113,51 +167,45 @@ Row
 
 ```{r, echo = FALSE}
 renderPlot({
-  filtered_songs <- songs %>%
+  filtered_songs <- songs |>
     filter(genre %in% c(input$genre, input$genre0))
   
   ggplot(filtered_songs, aes(y = .data[[input$y]], x = album_release_year, color = genre)) + 
     geom_point() + 
-    geom_smooth(method = "lm", se = F) + labs(x = "Album Release Year", color = "Genre") + theme_classic() + scale_color_calc()
+    geom_smooth(method = "lm", se = F) + 
+    labs(x = "Album Release Year", color = "Genre", title = "Song Traits Over Time") + 
+    theme_classic() + 
+    scale_color_manual(values=c("#1DB954", "black")) 
 })
+```
 
+```{r}
 renderPlot({
   filtered_songs <- songs %>%
     filter(genre %in% c(input$genre2, input$genre02))
   
   ggplot(filtered_songs, aes(x = .data[[input$x2]], fill = genre)) + 
-    geom_density(alpha = 0.5) + labs(fill = "Genre") + theme_classic() + scale_fill_calc()
+    geom_density(alpha = 0.5) + 
+    labs(fill = "Genre", title = "Comparing Song Traits For Two Genres") +
+    theme_classic() + 
+    scale_fill_manual(values=c("#1DB954", "black"))
 })
 ```
 
-Row
--------------------------
-
-**Basic Definitions:**
-
-- Danceability: How suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, and beat strength.  
-
-- Energy: A measure of intensity and activity that ranges from 0.0 to 1.0.
-
-- Loudness: The overall loudness of a track in decibels (dB).
-
-- Speechiness: Detects the presence of spoken words in a track. The values range from 0.0 to 1.0.
-
-- Acousticness: A measure of how acoustic a track is. Ranges from 0.0 to 1.0.
-
-- Instrumentalness: Measures the amount of vocal content in a track. Ranges from 0.0 to 1.0 with 1.0 being more instrumental.
-
-- Liveness: Detects the presence of an audience in the track, such as if the track was performed live or not. Ranges from 0.0 to 1.0.
-
-- Valence: Describes the musical positiveness of a track. The more positive a track is, the closer the value is to 1.0.
-
-- Tempo: The overall estimated tempo of a track in beats per minute (BPM).
 
 Row
 -------------------------
-The viewer has the ability to compare different genres and observe how the audio features have changed over time or compare the frequency of various audio features.
 
-**Some observations we made are:**
+### **Question & Plots Explanation:**
+
+**Question 1:** The first question we chose to look at is how the various audio features differ by genre. 
+
+
+
+**Plots Explanation:** The left plot analyzes these features over time and the right plot measures the frequency of each feature by genre. The viewer has the ability to compare different genres and observe how the audio features have changed over time or compare the frequency of various audio features.
+
+
+### **Observations / Conclusions:**
 
 - For the majority of genres, danceability, loudness, and liveness have increased over time.
 
@@ -199,10 +247,6 @@ inputPanel(
 
 ```
 
-Row
--------------------------------------
-
-Our second question was how do the various audio features differ for each genre based on each of the top artist's popularity score out of 100.
 
 Row
 -------------------------------------
@@ -221,16 +265,22 @@ genre3 <- reactive({
 renderPlot({
   ggplot(genre3(), aes(x = popularity, y = .data[[input$y5]], color = genre)) +
     geom_point(position = position_jitterdodge()) + 
-    labs(color = "Genre", x = "Popularity") + theme_classic() + scale_color_calc()
+    labs(color = "Genre", x = "Popularity", title = "The Relationship Between Popularity And A Song Trait For Selected Genres") + 
+    theme_classic() + 
+    scale_color_calc()
 })
 ```
 
 Row
 -------------------------------------
+### **Question & Plots Explanation:**
 
-The ability to select any number of the 10 genres gives viewers the freedom to explore differences in audio features based on  each artists popularity score.
+**Question 2:** Our second question was how do the various audio features differ for each genre based on each of the top artist's popularity score out of 100. 
 
-**Some trends we observed are:**
+**Plots Explanation:** The ability to select any number of the 10 genres gives viewers the freedom to explore differences in audio features based on  each artists popularity score.
+
+
+### **Observations / Conclusions:**
 
 - As artist popularity increases, both Instrumentalness and Liveness decrease.
 
@@ -240,8 +290,6 @@ The ability to select any number of the 10 genres gives viewers the freedom to e
 
 Artist Trends
 ==========================
-
-The third question we chose to look at was how the number of songs per album differs for the top artists within each genre. The left plot analyzes the number of songs per album over time and the right plot looks at how the amount of songs per album differs based on the artists popularity score out of 100.
 
 ```{r, echo = FALSE}
 inputPanel(
@@ -269,7 +317,11 @@ renderPlot({
     group_by(album_name) |>
   mutate(num_songsalbum = n()) |>
   ggplot(aes(y = num_songsalbum, x = album_release_year, color = name)) + 
-    geom_point() + geom_smooth(method = "lm", se = FALSE) + labs(x = "Album Release Year", color = "Artist Name", y = "Number of Songs per Album")+ theme_classic() + scale_color_calc()
+    geom_point() + 
+    geom_smooth(method = "lm", se = FALSE) + 
+    labs(x = "Album Release Year", color = "Artist Name", y = "Number of Songs per Album", title = "Number of Songs Per Album By Release Year For Top Artists of Selected Genre")+ 
+    theme_classic() + 
+    scale_color_manual(values=c("black", "limegreen","honeydew4", "yellowgreen", "ivory3"))
 })
 ```
 
@@ -281,16 +333,22 @@ renderPlot({
   mutate(num_songsalbum = n()) 
   
   ggplot(filtered_songs, aes(x = popularity, y = num_songsalbum, color = name)) + 
-    geom_boxplot() + labs(x = "Popularity", y = "Number of Songs per Album", color = "Artist Name") + theme_classic() + scale_color_calc()
+    geom_boxplot() + 
+    labs(x = "Popularity", y = "Number of Songs per Album", color = "Artist Name", title = "Relationship Between Number of Songs Per Album And Popularity For Top Artists of Selected Genre") + 
+    theme_classic() + 
+    scale_color_manual(values=c("black", "limegreen","honeydew4", "yellowgreen", "ivory3"))
 })
 ```
 
 Row
 -------------------------
+### **Question & Plots Explanation:**
 
-Viewers have the ability to change the genre that is shown in order to find the most popular artists of each genre. They can then observe how each artist's number of songs per genre has changed over time and how the artist's compare to each other in regards to number of songs per album.
+**Question 3:** The third question we chose to look at was how the number of songs per album differs for the top artists within each genre. 
 
-**Observations:**
+**Plots Explanation:** The left plot analyzes the number of songs per album over time and the right plot looks at how the amount of songs per album differs based on the artists popularity score out of 100. Viewers have the ability to change the genre that is shown in order to find the most popular artists of each genre. They can then observe how each artist's number of songs per genre has changed over time and how the artist's compare to each other in regards to number of songs per album.
+
+### **Observations / Conclusions:**
 
 - For all genres, we found that there has been an overall increase in the number of songs per album over time. 
 
@@ -301,14 +359,265 @@ Viewers have the ability to change the genre that is shown in order to find the 
 - It's interesting that the top artists typically don't have the highest number of songs per album. Maybe they have already established a reputation and don't feel pressured to release large quantities of songs at one time.
 
 
-Concluding Thoughts
+Tonality For Each Genre
 ==========================
 
-Although we outlined a few questions, our shiny app gives viewers the flexibility to look at many different questions regarding Spotify artists and their audio features. We hope that viewers may be able to learn more about their favorite genre and be able to find similarities and differences between their favorite and least favorite genres.
+Inputs {.sidebar}
+-------------------------
+
+```{r, echo=FALSE}
+  inputPanel(
+    checkboxGroupInput("genre_check2", "Select Genres:",
+                       choices = c("All", unique(as.character(songs$genre))),                         
+                       selected = "All")
+  )
+
+```
+
+### **Question & Plots Explanation:**
+
+**Questions:** These plots allow us to answer the questions, "how does the use of tonality (key and mode) vary among the different genres?" and "which genres had the most songs produced by their top artists?". It is important to note though that due to ties in popularity, some genres have three artists while others have four or five.  
+
+**Plots Explanation:** The left plot analyzes the use of mode (either minor or major) by selected genres while the right plot examines the use of key in the same selected genres. The user has the ability to select which genres they wish to include in the graph by using the check boxes on the side. For whichever genres the user selects, the graph allows them to compare the tonalities used by the top artists of those genres. The width of the columns are determined by the number of songs produced by the top artists of a given genre. 
+
+Row
+-------------------------------------
 
 
-**Tribulations and Victories of Data Acquisition and Wrangling:**
+```{r, echo=FALSE}
 
-After acquiring a Spotify ID and access token, we were able to view all Spotify data on an artist or song by using either it's name or it's unique ID. Originally, we had wanted to analyze at least five artists per genre in order to build a larger dataset and have more accurate analysis. However, our for loop was inconsistent with the large amount of data and had a difficult time finding the correct artists based of off their ID. Each time we ran the for loop, we would receive a dataset with a different number of artists. Due to this, we ended up reducing our sample size and looking at between three and five artists per genre. This was a significantly smaller number and allowed the for loop to work accurately, which enabled us to produce our final dataset. 
 
-by Belle Schmidt and Abby Hahs
+renderPlot({
+    filtered_songs <- if("All" %in% input$genre_check2) {
+      songs
+    } else {
+      songs %>% filter(genre %in% input$genre_check2)
+    }
+
+    ggplot(filtered_songs) + 
+      geom_mosaic(aes(x = product(genre), fill = mode_name)) +
+      labs(x = "Genre",
+           title = "Mode For Selected Genres",
+           y = "Mode",
+           fill = "Mode") +
+      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+      scale_fill_manual(values=c("black", "limegreen","honeydew4", "yellowgreen", "ivory3"))
+  })
+
+```
+
+
+
+```{r, echo=FALSE}
+renderPlot({
+    filtered_songs <- if("All" %in% input$genre_check2) {
+      songs
+    } else {
+      songs %>% filter(genre %in% input$genre_check2)
+    }
+
+     
+    ggplot(filtered_songs) + 
+      geom_mosaic(aes(x = product(genre), fill = key_name)) +
+      labs(x = "Genre",
+           title = "Key For Selected Genres",
+           fill = "Key",
+           y = "Key") +
+      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
+      scale_fill_manual(values=c("black", "gray32", "gray61","gray82","darkgreen","springgreen4","green4", "olivedrab4", "palegreen4", "palegreen3", "palegreen1", "lightgreen"))
+  })
+```
+
+Row
+-------------------------------------
+
+### **Observations / Conclusions Of Left Plot:**
+
+- Out of all the genres, Rock had the most songs produced by their top artists. Followed by Christian and then Hip-Hop.
+
+- The genre that had the least number of songs produced by their top artists is Indie. Followed by Latin and Country.
+
+- In general, the mode major seems to be more frequently used by top artists than minor. (Note: In the next section we will examine if this is skewed by specific artists) 
+
+- Top EDM, latin, and hip-hop artists do not show much of a preference for a specific mode.
+
+- Country and Christian songs produced by the top artists are almost always in the mode major.
+
+### **Observations / Conclusions Of Right Plot:**
+
+- The A key is most common in rock songs.
+
+- The B and E keys are used very similarly in almost all genres. 
+
+- The C key is most common in Christian and Pop songs. It is one of the most commonly used keys in almost all genres, particularly Christian and Pop.
+
+- The C# key occurs the most in Rap and Hip-Hop. In Rap, Hip-Hop, and Latin C# is the most commonly used key. 
+
+- The D key is most commonly used in christian and rock songs. 
+
+- The D# key rarely occurs in all genres. 
+
+- The G key is a commonly used key in all genres. 
+
+
+
+Tonality For Top Artists
+==========================
+
+Inputs {.sidebar}
+-------------------------
+
+```{r, echo = FALSE}
+inputPanel(
+ selectInput("genre4", label = "Genre:", 
+             choices = c("R&B" = "R&B",
+                         "Christian" = "christian",
+                         "Country" = "country",
+                         "EDM" = "edm",
+                         "Hip-Hop" = "hip-hop",
+                         "Indie" = "indie",
+                         "Latin" = "latin",
+                         "Pop" = "pop",
+                         "Rap" = "rap",
+                         "Rock" = "rock"))
+)
+```
+
+### **Questions & Plots Explanation:**
+
+**Questions:**  With these graphs, we wanted to answer the questions, "how does tonality use (key and mode) vary among the top artists of a given genre?" and "which of the top artists produce the most songs in each genre?".  
+
+**Plots Explanation:** The left plot analyzes the use of mode (either minor or major) by the top artists of a selected genre while the right plot examines the use of key by the top artists of the same selected genre. The user can use the dropdown menu on the top to select which genre's artists they wish to compare. For whichever genre the user selects, the graph allows them to compare the tonalities used by the top artists of that genre. The width of the columns in the graphs are determined by how many songs the given top artist produced. 
+
+Column {data-width = 200}
+-------------------------
+
+```{r, echo = FALSE}
+renderPlot({
+  songs2 %>%
+    filter(genre == input$genre4)|>
+    
+  ggplot() +
+    geom_mosaic(aes(x = product(name), fill = mode_name)) +
+    labs(x = "Singer Name", y = "Mode of Song", fill = "Mode", title = "Mode of Songs By Top Artists") + 
+    theme_classic() + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    scale_fill_manual(values=c("black", "limegreen","honeydew4", "yellowgreen", "ivory3"))
+})
+```
+
+
+
+```{r, echo = FALSE}
+renderPlot({
+  songs2 %>%
+    filter(genre == input$genre4)|>
+    
+  ggplot() +
+    geom_mosaic(aes(x = product(name), fill = key_name)) +
+    labs(x = "Singer Name", y = "Key of Songs", fill = "Key", title = "Key of Songs By Top Artists") + 
+    theme_classic() +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
+    scale_fill_manual(values=c("black", "gray32", "gray61","gray82","darkgreen","springgreen4","green4", "olivedrab4", "palegreen4", "palegreen3", "palegreen1", "lightgreen"))
+    
+})
+```
+
+
+Row
+-------------------------
+
+### **Top Artists Of Corresponding Genre With Most Songs:**
+
+  - **R&B:** Michael Jackson
+     
+  - **Christian:** Hillsong Worship
+     
+  - **Country:** Zach Bryan
+
+  - **EDM:** Tiesto
+
+  - **Hip-Hop:** Snoop Dogg
+
+  - **Indie:** Artic Monkeys
+
+  - **Latin:** Bad Bunny
+
+  - **Pop:**  Taylor Swift
+
+  - **Rap:** Future
+
+  - **Rock:** The Beatles
+     
+### **Left Plot Observations / Conclusions:**
+
+- For Country, all three of the top artists have almost the same ratio of major to minor songs. All three produce almost purely songs in major. 
+
+- All of the top EDM, Latin, and Rap artists have a very similar ratio for songs they produce in major vs minor. They all have a relatively even split, although the Latin artists seem to have slightly more songs in minor. 
+     
+- Out of the Indie artists, Hozier and the Arctic Monkeys have about half their songs in major and the other half in minor while Noah Kahan has almost only songs in major. 
+ 
+- All three of the top pop artists have a very different distribution for songs in major vs. minor. Drake has a relatively even split between the two modes, Taylor Swift sings most of her songs in major, and The Weeknd sings more of his songs in minor. 
+
+### **Right Plot Observations / Conclusions:**
+
+- **R&B:** 
+
+  - Michael Jackson used the B key far more than the other R&B artists. 
+  - Daniel Cesear uses/ used the G key more than the other R&B artists
+  - All the top R&B artists used/ use the A# key at a similar rate. 
+
+
+- **Christian:**
+
+  - Elevation Worship uses/used the G key way less than the other top Christian artists. 
+  - The A# key is rarely used by all top Christian artists. 
+  - All of the top Christian artists use the D and C keys relatively often. 
+
+
+- **Country:**
+
+  - Zach Bryan uses F# way less than the other top Country artists. 
+  - Luke Combs rarely uses A. 
+  - Zach Bryan uses a lot of key C, especially compared to the other top country artists.
+
+
+- **EDM:** 
+ 
+  - All three EDM artists use almost all keys at a relatively similar rate. Tiesto however uses D# way less than the others and Kygo uses C much more.  
+
+
+- **Hip-Hop:** 
+
+  - All five of the top Hip-Hop artists use the C# key the most. 
+
+
+- **Indie:** 
+
+  - Hozier uses the B key way less than the other two popular Indie artists. In fact, the B key is one ofHozier's  least used keys while it is the Arctic Monkeys and  Noah Kahan's most most used key. 
+  - Hozier uses the G key the most. 
+  - Noah Kahan and the Arctic Monkeys use the 
+
+
+- **Latin:** 
+  - All three artists use the C# key the most. 
+  - All three use hte D# key the least. 
+  - In general the distribution of keys used is almost the same for all three artists. 
+
+
+- **Pop:** 
+  - The least commonly used key for all three of the top Pop artists is D#. 
+  - Drake most commonly uses C#.
+  - Taylor Swift and The Weeknd both use the C key the most, followed by the G key. 
+
+
+- **Rap:** 
+  - The C# key is the most common key for all three of the top rap artists.
+  - Travis Scott uses the F# key the least while Future and Metro Boomin use the D# key the least. 
+
+
+- **Rock:** 
+  - The Imagine Dragons use the C key the most. 
+  - Linkin Park uses the C# key the most. 
+  - Queen used the D key the most. 
+  - The Beattles used A key, C key, D key, E key, and G key frequently (almost equally). They rarely used sharps (#). 

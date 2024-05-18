@@ -13,6 +13,10 @@ library(viridis)
 library(ggmosaic)
 library(shiny)
 library(ggiraph)
+library(bslib)
+library(rlang)
+library(flexdashboard)
+library(dbplyr)
 ```
 
 ```{r, echo = FALSE}
@@ -27,53 +31,67 @@ songs2 <-
 ```
 
 
-1
+Tonality For Each Genre
 ==========================
 
-
-Column {data-width = 200}
+Inputs {.sidebar}
 -------------------------
-```{r, echo = FALSE}
-ggplot(data = songs) + 
-  geom_mosaic(aes(x = product(genre), fill = mode_name))+
-  labs(x = "Genre",
-       title = "Mode For Each Genre",
-       fill = "Mode") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_mosaic_text(aes(x = product(mode_name, genre),
-label = after_stat(.wt))) 
 
-ggplot(data = songs) + 
-  geom_mosaic(aes(x = product(genre), fill = key_name))+
-  labs(x = "Genre",
-       title = "Key For Each Genre",
-       fill = "Key") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_mosaic_text(aes(x = product(key_name, genre),
-label = after_stat(.wt)))
+Genres
 
+```{r, echo=FALSE}
+  inputPanel(
+    checkboxGroupInput("genre_check2", "Select Genres:",
+                       choices = c("All", unique(as.character(songs$genre))),                         
+                       selected = "All")
+  )
 
 ```
 
+Row
+-------------------------------------
 
-Column {data-width = 200}
--------------------------
-```{r, echo = FALSE}
-ggplot(data = songs) + 
-  geom_mosaic(aes(x = product(mode_name), fill = key_name))+
-  labs(x = "Mode",
-       title = "Key For Each Mode",
-       fill = "Key",
-       x = "Mode") +
-  geom_mosaic_text(aes(x = product(key_name, mode_name),
-label = after_stat(.wt)))
+```{r, echo=FALSE}
+renderPlot({
+    filtered_songs <- if("All" %in% input$genre_check2) {
+      songs
+    } else {
+      songs %>% filter(genre %in% input$genre_check2)
+    }
+
+    ggplot(filtered_songs) + 
+      geom_mosaic(aes(x = product(genre), fill = mode_name)) +
+      labs(x = "Genre",
+           title = "Mode For Each Genre",
+           fill = "Mode") +
+      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  })
 
 ```
 
+Row
+-------------------------------------
+
+```{r, echo=FALSE}
+renderPlot({
+    filtered_songs <- if("All" %in% input$genre_check2) {
+      songs
+    } else {
+      songs %>% filter(genre %in% input$genre_check2)
+    }
+
+     
+    ggplot(filtered_songs) + 
+      geom_mosaic(aes(x = product(genre), fill = key_name)) +
+      labs(x = "Genre",
+           title = "Key For Each Genre",
+           fill = "Key") +
+      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
+  })
+```
 
 
-
-2
+Tonality For Top Artists
 ==========================
 
 ```{r, echo = FALSE}
@@ -95,6 +113,7 @@ inputPanel(
 Column {data-width = 200}
 -------------------------
 
+
 ```{r, echo = FALSE}
 renderPlot({
   songs2 %>%
@@ -111,6 +130,8 @@ renderPlot({
 
 Column {data-width = 200}
 -------------------------------------
+
+
 ```{r, echo = FALSE}
 renderPlot({
   songs2 %>%
@@ -123,3 +144,5 @@ renderPlot({
     scale_color_calc()
 })
 ```
+
+
