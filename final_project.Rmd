@@ -33,7 +33,7 @@ After acquiring a Spotify ID and access token, we were able to view all Spotify 
 
 **Color Scheme:**
 
-Since our data was pulled from Spotify, we wanted our graphs to all have a color scheme related to Spotify. Unfortunately for the graph on the Audio Features Part 2 page, too many colors were required for points that overlapped, making it impossible to find a solution where the colors were all differential. As a result, we stuck with the scale_color_calc() color scale. On all the other graphs, we used shades of green, grey, and black, the Spotify colors, to represent the data. On the Audio Features Part 1 page we even used the same shade of green that is in the official Spotify logo. 
+Since our data was pulled from Spotify, we wanted our graphs to all have a color scheme related to Spotify. Unfortunately, for the graph on the Audio Features Part 2 page, too many colors were required for points that overlapped, making it impossible to find a solution where the colors were all different. As a result, we stuck with the scale_color_calc() color scale. On all the other graphs, we used shades of green, grey, and black (the Spotify colors) to represent the data. On the Audio Features Part 1 page we were able to use the same shade of green that is in the official Spotify logo. 
 
 
 ### **Defining The Variables**
@@ -71,7 +71,7 @@ library(rlang)
 library(flexdashboard)
 library(dplyr)
 library(ggmosaic)
-library(shinydashboard)
+#library(shinydashboard)
 library(shiny)
 ```
 
@@ -88,12 +88,12 @@ songs2 <-
 Audio Features part 1
 ==========================
 
-Row
+Row {data-height = 50}
 -------------------------
 
 ```{r, echo=FALSE}
 inputPanel(
- selectInput("y", label = "y-axis variable:",
+ selectInput("y", label = "variable:",
     choices = c("Danceability" = "danceability",
                 "Energy" = "energy",
                 "Loudness" = "loudness",
@@ -126,43 +126,10 @@ inputPanel(
                          "Rap" = "rap",
                          "Rock" = "rock"))
 )
-inputPanel(
-  selectInput("x2", label = "x-axis variable:",
-    choices = c("Danceability" = "danceability",
-                "Energy" = "energy",
-                "Loudness" = "loudness",
-                "Speechiness" = "speechiness", 
-                "Acousticness" = "acousticness", 
-                "Instrumentalness" = "instrumentalness",
-                "Liveness" = "liveness",
-                "Valence" = "valence",
-                "Tempo" = "tempo")),
- selectInput("genre2", label = "Genre 1:", 
-             choices = c("R&B" = "R&B",
-                         "Christian" = "christian",
-                         "Country" = "country",
-                         "EDM" = "edm",
-                         "Hip-Hop" = "hip-hop",
-                         "Indie" = "indie",
-                         "Latin" = "latin",
-                         "Pop" = "pop",
-                         "Rap" = "rap",
-                         "Rock" = "rock")),
- selectInput("genre02", label = "Genre 2:", 
-             choices = c("R&B" = "R&B",
-                         "Christian" = "christian",
-                         "Country" = "country",
-                         "EDM" = "edm",
-                         "Hip-Hop" = "hip-hop",
-                         "Indie" = "indie",
-                         "Latin" = "latin",
-                         "Pop" = "pop",
-                         "Rap" = "rap",
-                         "Rock" = "rock"))
-)
+
 ```
 
-Row
+Row {data-height = 50}
 -------------------------
 
 ```{r, echo = FALSE}
@@ -173,7 +140,7 @@ renderPlot({
   ggplot(filtered_songs, aes(y = .data[[input$y]], x = album_release_year, color = genre)) + 
     geom_point() + 
     geom_smooth(method = "lm", se = F) + 
-    labs(x = "Album Release Year", color = "Genre", title = "Song Traits Over Time") + 
+    labs(x = "Album Release Year", color = "Genre", title = "Audio Features Over Time") + 
     theme_classic() + 
     scale_color_manual(values=c("#1DB954", "black")) 
 })
@@ -182,11 +149,11 @@ renderPlot({
 ```{r, echo=FALSE}
 renderPlot({
   filtered_songs <- songs %>%
-    filter(genre %in% c(input$genre2, input$genre02))
+    filter(genre %in% c(input$genre, input$genre0))
   
-  ggplot(filtered_songs, aes(x = .data[[input$x2]], fill = genre)) + 
+  ggplot(filtered_songs, aes(x = .data[[input$y]], fill = genre)) + 
     geom_density(alpha = 0.5) + 
-    labs(fill = "Genre", title = "Comparing Song Traits For Two Genres") +
+    labs(fill = "Genre", title = "Comparing Audio Features for Two Genres") +
     theme_classic() + 
     scale_fill_manual(values=c("#1DB954", "black"))
 })
@@ -265,7 +232,7 @@ genre3 <- reactive({
 renderPlot({
   ggplot(genre3(), aes(x = popularity, y = .data[[input$y5]], color = genre)) +
     geom_point(position = position_jitterdodge()) + 
-    labs(color = "Genre", x = "Popularity", title = "The Relationship Between Popularity And A Song Trait For Selected Genres") + 
+    labs(color = "Genre", x = "Popularity", title = "The Relationship Between Artist Popularity and an Audio Feature for Selected Genres") + 
     theme_classic() + 
     scale_color_calc()
 })
@@ -319,7 +286,7 @@ renderPlot({
   ggplot(aes(y = num_songsalbum, x = album_release_year, color = name)) + 
     geom_point() + 
     geom_smooth(method = "lm", se = FALSE) + 
-    labs(x = "Album Release Year", color = "Artist Name", y = "Number of Songs per Album", title = "Number of Songs Per Album By Release Year For Top Artists of Selected Genre")+ 
+    labs(x = "Album Release Year", color = "Artist Name", y = "Number of Songs per Album", title = "Number of Songs Per Album by Release Year for Top Artists of Selected Genre")+ 
     theme_classic() + 
     scale_color_manual(values=c("black", "limegreen","honeydew4", "yellowgreen", "ivory3"))
 })
@@ -334,7 +301,7 @@ renderPlot({
   
   ggplot(filtered_songs, aes(x = popularity, y = num_songsalbum, color = name)) + 
     geom_boxplot() + 
-    labs(x = "Popularity", y = "Number of Songs per Album", color = "Artist Name", title = "Relationship Between Number of Songs Per Album And Popularity For Top Artists of Selected Genre") + 
+    labs(x = "Popularity", y = "Number of Songs per Album", color = "Artist Name", title = "Relationship between Number of Songs Per Album and Popularity for Top Artists of Selected Genre") + 
     theme_classic() + 
     scale_color_manual(values=c("black", "limegreen","honeydew4", "yellowgreen", "ivory3"))
 })
@@ -354,7 +321,7 @@ Row
 
 - For both EDM and Pop, the artist with the highest popularity has the highest average number of songs per album.
 
-- The top artist for R&B, EDM, and Pop have the most songs per album in 2020.
+- The top artists for R&B, EDM, and Pop have the most songs per album in 2020.
 
 - It's interesting that the top artists typically don't have the highest number of songs per album. Maybe they have already established a reputation and don't feel pressured to release large quantities of songs at one time.
 
@@ -397,7 +364,7 @@ renderPlot({
     ggplot(filtered_songs) + 
       geom_mosaic(aes(x = product(genre), fill = mode_name)) +
       labs(x = "Genre",
-           title = "Mode For Selected Genres",
+           title = "Mode for Selected Genres",
            y = "Mode",
            fill = "Mode") +
       theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
@@ -420,7 +387,7 @@ renderPlot({
     ggplot(filtered_songs) + 
       geom_mosaic(aes(x = product(genre), fill = key_name)) +
       labs(x = "Genre",
-           title = "Key For Selected Genres",
+           title = "Key for Selected Genres",
            fill = "Key",
            y = "Key") +
       theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
@@ -437,11 +404,11 @@ Row
 
 - The genre that had the least number of songs produced by their top artists is Indie. Followed by Latin and Country.
 
-- In general, the mode major seems to be more frequently used by top artists than minor. (Note: In the next section we will examine if this is skewed by specific artists) 
+- In general, major seems to be more frequently used by top artists than minor. (Note: In the next section we will examine if this is skewed by specific artists) 
 
 - Top EDM, Latin, and Hip-Hop artists do not show much of a preference for a specific mode.
 
-- Country and Christian songs produced by the top artists are almost always in the mode major.
+- Country and Christian songs produced by the top artists are almost always in major.
 
 ### **Observations / Conclusions Of Right Plot:**
 
@@ -499,7 +466,7 @@ renderPlot({
     
   ggplot() +
     geom_mosaic(aes(x = product(name), fill = mode_name)) +
-    labs(x = "Singer Name", y = "Mode of Song", fill = "Mode", title = "Mode of Songs By Top Artists") + 
+    labs(x = "Singer Name", y = "Mode of Song", fill = "Mode", title = "Mode of Songs by Top Artists") + 
     theme_classic() + 
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
     scale_fill_manual(values=c("black", "limegreen","honeydew4", "yellowgreen", "ivory3"))
@@ -515,7 +482,7 @@ renderPlot({
     
   ggplot() +
     geom_mosaic(aes(x = product(name), fill = key_name)) +
-    labs(x = "Singer Name", y = "Key of Songs", fill = "Key", title = "Key of Songs By Top Artists") + 
+    labs(x = "Singer Name", y = "Key of Songs", fill = "Key", title = "Key of Songs by Top Artists") + 
     theme_classic() +
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
     scale_fill_manual(values=c("black", "gray32", "gray61","gray82","darkgreen","springgreen4","green4", "olivedrab4", "palegreen4", "palegreen3", "palegreen1", "lightgreen"))
@@ -564,8 +531,8 @@ Row
 - **R&B:** 
 
   - Michael Jackson used the B key far more than the other R&B artists. 
-  - Daniel Cesear uses/ used the G key more than the other R&B artists
-  - All the top R&B artists used/ use the A# key at a similar rate. 
+  - Daniel Cesear uses/used the G key more than the other R&B artists
+  - All the top R&B artists use/used the A# key at a similar rate. 
 
 
 - **Christian:**
