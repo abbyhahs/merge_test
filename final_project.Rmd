@@ -179,7 +179,7 @@ renderPlot({
 })
 ```
 
-```{r}
+```{r, echo=FALSE}
 renderPlot({
   filtered_songs <- songs %>%
     filter(genre %in% c(input$genre2, input$genre02))
