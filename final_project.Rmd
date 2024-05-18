@@ -4,8 +4,9 @@ runtime: shiny
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
-    theme: sandstone
-
+    theme: 
+      version: 4
+      bootswatch: sandstone
 ---
 
 
@@ -73,6 +74,7 @@ library(dplyr)
 library(ggmosaic)
 #library(shinydashboard)
 library(shiny)
+library(bslib)
 ```
 
 ```{r, echo = FALSE}
@@ -88,7 +90,7 @@ songs2 <-
 Audio Features part 1
 ==========================
 
-Row {data-height = 50}
+Row 
 -------------------------
 
 ```{r, echo=FALSE}
@@ -129,7 +131,7 @@ inputPanel(
 
 ```
 
-Row {data-height = 50}
+Row 
 -------------------------
 
 ```{r, echo = FALSE}
