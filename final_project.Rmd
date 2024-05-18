@@ -286,7 +286,7 @@ Row
 
 - Regardless of popularity, all genres have high Loudness and low Speechiness.
 
-- As a whole, artist popularity does not seem to determine any changes in the levels of the various audio features. 
+- As a whole, artist popularity does not seem to determine any changes in the levels of the various audio features.
 
 Artist Trends
 ==========================
@@ -439,23 +439,23 @@ Row
 
 - In general, the mode major seems to be more frequently used by top artists than minor. (Note: In the next section we will examine if this is skewed by specific artists) 
 
-- Top EDM, latin, and hip-hop artists do not show much of a preference for a specific mode.
+- Top EDM, Latin, and Hip-Hop artists do not show much of a preference for a specific mode.
 
 - Country and Christian songs produced by the top artists are almost always in the mode major.
 
 ### **Observations / Conclusions Of Right Plot:**
 
-- The A key is most common in rock songs.
+- The A key is most common in Rock songs.
 
 - The B and E keys are used very similarly in almost all genres. 
 
 - The C key is most common in Christian and Pop songs. It is one of the most commonly used keys in almost all genres, particularly Christian and Pop.
 
-- The C# key occurs the most in Rap and Hip-Hop. In Rap, Hip-Hop, and Latin C# is the most commonly used key. 
+- The C# key is used by far the most in Rap and Hip-Hop. It is however the most commonly used key in Latin, Rap, and Hip-Hop. 
 
-- The D key is most commonly used in christian and rock songs. 
+- The D key is most commonly used in Christian and Rock songs. 
 
-- The D# key rarely occurs in all genres. 
+- The D# key is rarely used in all genres. 
 
 - The G key is a commonly used key in all genres. 
 
@@ -487,7 +487,7 @@ inputPanel(
 
 **Questions:**  With these graphs, we wanted to answer the questions, "how does tonality use (key and mode) vary among the top artists of a given genre?" and "which of the top artists produce the most songs in each genre?".  
 
-**Plots Explanation:** The left plot analyzes the use of mode (either minor or major) by the top artists of a selected genre while the right plot examines the use of key by the top artists of the same selected genre. The user can use the dropdown menu on the top to select which genre's artists they wish to compare. For whichever genre the user selects, the graph allows them to compare the tonalities used by the top artists of that genre. The width of the columns in the graphs are determined by how many songs the given top artist produced. 
+**Plots Explanation:** The left plot analyzes the use of mode (either minor or major) by the top artists of a selected genre. The right plot examines the use of key by the top artists of the same selected genre. The user can use the drop down menu to the side of the graphs to select which genre's top artists they wish to compare. For whichever genre the user selects, the graph allows them to compare the tonalities used by the top artists of that genre. The width of the columns in the graphs are determined by how many songs the given top artist produced. 
 
 Column {data-width = 200}
 -------------------------
@@ -527,7 +527,7 @@ renderPlot({
 Row
 -------------------------
 
-### **Top Artists Of Corresponding Genre With Most Songs:**
+### **Top Artist Of Corresponding Genre With Most Songs:**
 
   - **R&B:** Michael Jackson
      
@@ -555,7 +555,7 @@ Row
 
 - All of the top EDM, Latin, and Rap artists have a very similar ratio for songs they produce in major vs minor. They all have a relatively even split, although the Latin artists seem to have slightly more songs in minor. 
      
-- Out of the Indie artists, Hozier and the Arctic Monkeys have about half their songs in major and the other half in minor while Noah Kahan has almost only songs in major. 
+- Out of the Indie artists, Hozier and the Arctic Monkeys have about half of their songs in major and the other half in minor while Noah Kahan has almost only songs in major. 
  
 - All three of the top pop artists have a very different distribution for songs in major vs. minor. Drake has a relatively even split between the two modes, Taylor Swift sings most of her songs in major, and The Weeknd sings more of his songs in minor. 
 

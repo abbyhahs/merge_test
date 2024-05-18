@@ -1,0 +1,30 @@
+Observations for Graph 1:
+### **Observations / Conclusions:**
+
+From the graphs, we were able to make various conclusions. The first conclusion is that for the majority of genres, Danceability, Loudness, and Liveness increased over time while Energy, Speechiness, Acousticness, Instrumentalness, Valence, and Tempo decreased or stayed constant over time. In addition, genres with high Danceability also tend to have high Energy and Loudness. Another conclusion we were able to make was that all genres have low Speechiness, Acousticness, Instrumentalness, and Liveness. Lastly, we found that there were three main groups with similar audio features. First, R&B, Hip-Hop, and Latin. Second, Country, Rock, and Indie. And lastly, Pop and EDM.
+
+- For the majority of genres, danceability, loudness, and liveness have increased over time.
+
+- For the majority of genres, energy, speechiness, acousticness, instrumentalness, valence, and tempo have decreased or stayed constant over time.
+
+- Genres with high Danceability also tend to have high Energy and Loudness.
+
+- All genres have low Speechiness, Acousticness, Instrumentalness, and Liveness.
+
+- R&B, Hip-Hop, and Latin all have similar audio features.
+
+- Country, Rock, and Indie have similar features.
+
+- Pop and EDM have similar features.
+
+
+
+Observations For Page 2 Graphs:
+
+There were three main takeaways from this graph. The first one is that as artist popularity increases, both Instrumentalness and Liveness decreases. Next, regardless of popularity, all genres have high Loudness and low Speechiness. Finally, as a whole, artist popularity does not seem to determine any changes in the levels of the various audio features. 
+
+- As artist popularity increases, both Instrumentalness and Liveness decrease.
+
+- Regardless of popularity, all genres have high Loudness and low Speechiness.
+
+- As a whole, artist popularity does not seem to determine any changes in the levels of the various audio features.
